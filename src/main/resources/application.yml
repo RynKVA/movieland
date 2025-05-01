@@ -1,0 +1,18 @@
+server:
+  port: 3001
+
+spring:
+  dataSource:
+    url: jdbc:postgresql://localhost:5432/movieland
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  jooq:
+    sql-dialect: POSTGRES
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+
+logging:
+  level:
+    root: debug

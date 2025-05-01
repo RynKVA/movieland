@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <property name="LOG_ROOT" value="./logs"/>
+    <property name="LOG_FILE" value="${LOG_ROOT}/movieland.log"/>
+    <property name="CONSOLE_LOG_PATTERN"
+              value="%green(%d) %magenta([%t]) %highlight(%-5level) %cyan(%C{1}) %magenta(%m%n)"/>
+    <property name="FILE_LOG_PATTERN"
+              value="%d %p %C{1} [%t] %m%n"/>
+
+    <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+    </appender>
+
+    <appender name="RollingFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_FILE}</file>
+        <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+            <layout class="ch.qos.logback.classic.PatternLayout">
+                <pattern>${FILE_LOG_PATTERN}</pattern>
+            </layout>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_ROOT}/movieland-%d{yyyy-MM-dd}.log.%i</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy
+                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>5MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <maxHistory>4</maxHistory>
+        </rollingPolicy>
+    </appender>
+
+    <root level="DEBUG">
+        <appender-ref ref="Console"/>
+        <appender-ref ref="RollingFile"/>
+    </root>
+
+</configuration>
