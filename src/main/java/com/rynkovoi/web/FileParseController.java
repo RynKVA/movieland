@@ -1,3 +1,4 @@
+/*
 package com.rynkovoi.web;
 
 import com.rynkovoi.service.UploadService;
@@ -25,4 +26,4 @@ public class FileParseController {
         log.info("Upload and parse files: {}, {}, {}", movies.getOriginalFilename(), genres.getOriginalFilename(), posters.getOriginalFilename());
         uploadService.parseAndSaveFiles(movies, genres, posters);
     }
-}
+}*/

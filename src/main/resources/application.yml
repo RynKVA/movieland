@@ -1,11 +1,11 @@
 server:
-  port: 3001
+  port: ${PORT:3001}
 
 spring:
   dataSource:
-    url: jdbc:postgresql://localhost:5432/movieland
-    username: postgres
-    password: postgres
+    url: ${URL_DB:jdbc:postgresql://movieland-pg:5432/movieland}
+    username: ${DB_USER:postgres}
+    password: ${DB_PASSWORD:postgres}
     driver-class-name: org.postgresql.Driver
   jooq:
     sql-dialect: POSTGRES
@@ -16,3 +16,7 @@ spring:
 logging:
   level:
     root: debug
+
+movie:
+  random:
+    countOfMovies: 3

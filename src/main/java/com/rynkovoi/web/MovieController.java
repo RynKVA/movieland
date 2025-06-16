@@ -1,9 +1,12 @@
 package com.rynkovoi.web;
 
 import com.rynkovoi.service.MovieService;
+import com.rynkovoi.type.SortType;
 import com.rynkovoi.web.dto.MovieDto;
+import com.rynkovoi.web.request.SortRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jooq.SortOrder;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,19 +25,22 @@ public class MovieController {
     private final MovieService movieService;
 
     @GetMapping
-    public List<MovieDto> getSortedOrDefaultMovies(@RequestParam(required = false) String sortBy,
-                                                   @RequestParam(required = false) String order) {
-        log.info("Get sorted movies by {} order be {}", sortBy, order);
-        return movieService.getSortedMovies(sortBy, order);
+    public List<MovieDto> getSortedOrDefaultMovies(@RequestParam(required = false) SortType sortBy,
+                                                   @RequestParam(required = false) SortOrder orderBy) {
+        log.info("Get all movies");
+        return movieService.getSortedMovies(SortRequest.builder()
+                .sortType(sortBy)
+                .sortOrder(orderBy)
+                .build());
     }
 
     @GetMapping("/random")
     public List<MovieDto> getRandomThreeMovies() {
-        log.info("Get random three movies");
-        return movieService.getRandomThreeMovies();
+        log.info("Get random movies");
+        return movieService.getRandomMovies();
     }
 
-    @GetMapping("genre/{genreId}")
+    @GetMapping("genres/{genreId}")
     public List<MovieDto> getMoviesByGenre(@PathVariable int genreId) {
         log.info("Get movies by genre id {}", genreId);
         return movieService.getMoviesByGenreId(genreId);

@@ -9,14 +9,14 @@ import java.util.Arrays;
 @AllArgsConstructor
 public enum SortType {
 
-    Rating("rating"),
-    Price("price");
+    RATING("rating"),
+    PRICE("price");
 
     private final String filterBy;
 
     public static SortType fromString(String filterBy) {
         return Arrays.stream(SortType.values()).filter(sortByType -> sortByType.getFilterBy().equalsIgnoreCase(filterBy))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("No enum constant found for filterBy: %s".formatted(filterBy)));
+                .orElseThrow(() -> new IllegalArgumentException("No type found for filterBy: %s".formatted(filterBy)));
     }
 }

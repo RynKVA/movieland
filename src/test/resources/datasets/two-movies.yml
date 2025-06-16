@@ -1,0 +1,20 @@
+movies:
+  - id: 1
+    name_native: "The Shawshank Redemption"
+    name_russian: "Побег из Шоушенка"
+    release_country: "USA"
+    year_of_release: 1994
+    rating: 8.9
+    price: 345.67
+    description: "Two imprisoned"
+    poster: "https://images-na.ssl-images-amazon.com/images/M/MV5BODU4MjU4NjIwNl5BMl5BanBnXkFtZTgwMDU2MjEyMDE@._V1._SY209_CR0,0,140,209_.jpg"
+
+  - id: 2
+    name_native: "The Godfather"
+    name_russian: "Крёстный отец"
+    release_country: "USA"
+    year_of_release: 1972
+    rating: 9.2
+    price: 234.56
+    description: "Two imprisoned"
+    poster: "https://images-na.ssl-images-amazon.com/images/M/MV5BMTYzNjQ3NzY4OF5BMl5BanBnXkFtZTcwNTI0MjEyMQ@@._V1._SY209_CR0,0,140,209_.jpg"

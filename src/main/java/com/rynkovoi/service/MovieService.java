@@ -1,7 +1,7 @@
 package com.rynkovoi.service;
 
 import com.rynkovoi.web.dto.MovieDto;
-import org.springframework.web.multipart.MultipartFile;
+import com.rynkovoi.web.request.SortRequest;
 
 import java.util.List;
 
@@ -9,11 +9,10 @@ public interface MovieService {
 
     List<MovieDto> getAllMovies();
 
-    List<MovieDto> getRandomThreeMovies();
+    List<MovieDto> getRandomMovies();
 
     List<MovieDto> getMoviesByGenreId(int genreId);
 
-    List<MovieDto> getSortedMovies(String sortType, String order);
+    List<MovieDto> getSortedMovies(SortRequest request);
 
-    void saveParsedMovies(MultipartFile movies, MultipartFile posters);
 }

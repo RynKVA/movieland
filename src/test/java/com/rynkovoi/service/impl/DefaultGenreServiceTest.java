@@ -1,50 +1,41 @@
 package com.rynkovoi.service.impl;
 
 import com.rynkovoi.ExemplarsCreator;
-import com.rynkovoi.exception.GenreNotFoundException;
-import com.rynkovoi.repository.GenreRepository;
-import com.rynkovoi.service.cache.GenresCacheService;
+import com.rynkovoi.mapper.GenresMapper;
+import com.rynkovoi.model.Genre;
+import com.rynkovoi.service.cache.GenreCache;
 import com.rynkovoi.web.dto.GenreDto;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 class DefaultGenreServiceTest {
 
     @Mock
-    private GenreRepository genreRepository;
+    private GenresMapper genresMapper;
 
     @Mock
-    private GenresCacheService genresCacheService;
+    private GenreCache<Genre> cache;
 
     @InjectMocks
-    private DefaultGenreService genreService;
+    private DefaultGenresService genreService;
 
-    @Test
-    void testSaveGenres() {
-        List<GenreDto> genres = ExemplarsCreator.createGenreDtoListWithThreeGenres();
-        doNothing().when(genreRepository).saveGenres(genres);
-
-        genreService.saveGenres(genres);
-
-        verify(genreRepository).saveGenres(anyList());
-    }
 
     @Test
     void whenGetAllGenres_thenReturnAllGenresFromGenresCache() {
-        when(genresCacheService.getAllGenres())
-                .thenReturn(ExemplarsCreator.createGenreDtoListWithThreeGenres());
+        List<Genre> genreListWithThreeGenres = ExemplarsCreator.createGenreListWithThreeGenres();
+        when(cache.getValues())
+                .thenReturn(genreListWithThreeGenres);
+        when(genresMapper.toGenreDto(genreListWithThreeGenres)).thenReturn(ExemplarsCreator.createGenreDtoListWithThreeGenres());
 
         List<GenreDto> allGenres = genreService.getAllGenres();
         assertEquals(3, allGenres.size());
@@ -52,35 +43,7 @@ class DefaultGenreServiceTest {
         assertEquals("Comedy", allGenres.get(1).getName());
         assertEquals("Drama", allGenres.get(2).getName());
 
-        verify(genresCacheService).getAllGenres();
-    }
-
-    @Test
-    void whenGetGenreWithExistingId_thenReturnCorrespondingGenre() {
-        int genreId = 1;
-        when(genresCacheService.getById(genreId)).thenReturn(
-                ExemplarsCreator.createGenreDtoBuilder().build()
-        );
-
-        GenreDto genre = genreService.getGenre(genreId);
-
-        assertEquals(1, genre.getId());
-        assertEquals("Action", genre.getName());
-
-        verify(genresCacheService).getById(genreId);
-    }
-
-    @Test
-    void whenGetGenreWithNotExistingId_thenExpectGenreNotFoundException() {
-        int notExistingGenreId = 1;
-        when(genresCacheService.getById(notExistingGenreId)).thenThrow(
-                new GenreNotFoundException("Genre not found with id: %s".formatted(notExistingGenreId))
-        );
-
-        GenreNotFoundException exception = assertThrows(GenreNotFoundException.class,
-                () -> genreService.getGenre(notExistingGenreId));
-
-        assertEquals("Genre not found with id: 1", exception.getMessage());
-        verify(genresCacheService).getById(notExistingGenreId);
+        verify(cache).getValues();
+        verify(genresMapper).toGenreDto(genreListWithThreeGenres);
     }
 }

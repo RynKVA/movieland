@@ -1,6 +1,7 @@
+/*
 package com.rynkovoi.service.parser;
 
-import com.rynkovoi.service.cache.GenresCacheService;
+import com.rynkovoi.service.impl.DefaultGenresService;
 import com.rynkovoi.web.dto.ParsedMovie;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +21,7 @@ import java.util.regex.Pattern;
 @Service
 public class FileParser {
 
-    private final GenresCacheService genresCacheService;
+    private final DefaultGenresService genresCacheService;
     private static final Pattern URL_PATTERN = Pattern.compile(
             "(https?://\\S+)", Pattern.CASE_INSENSITIVE
     );
@@ -47,9 +48,11 @@ public class FileParser {
         return new String(bytes);
     }
 
-    /**
+    */
+/**
      Utils
-     */
+     *//*
+
 
     private List<ParsedMovie> parseToParsedMovie(String content, List<String> posters) {
         List<List<String>> blocks = parseFileOnBlocks(content);
@@ -113,4 +116,4 @@ public class FileParser {
         return "";
     }
 
-}
+}*/

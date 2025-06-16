@@ -1,3 +1,4 @@
+/*
 package com.rynkovoi.service.impl;
 
 import com.rynkovoi.service.GenreService;
@@ -23,4 +24,4 @@ public class DefaultUploadService implements UploadService {
         genreService.saveParsedGenreNames(genres);
         movieService.saveParsedMovies(movies, posters);
     }
-}
+}*/
