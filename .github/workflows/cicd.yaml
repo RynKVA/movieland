@@ -28,8 +28,6 @@
                 with:
                     username: ${{ secrets.DOCKERHUB_USERNAME }}
                     password: ${{ secrets.DOCKERHUB_PASSWORD }}
-#                    username: rynkvaj
-#                    password: o1d2e3s4a5
 
               - name: Build and push Docker image
                 uses: docker/build-push-action@v5
@@ -49,6 +47,7 @@
               username: ${{ secrets.SERVER_USER }}
               key: ${{ secrets.SSH_PRIVATE_KEY }}
               script: |
+                docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_PASSWORD }}
                 docker-compose down
                 docker-compose pull
                 docker-compose up -d
