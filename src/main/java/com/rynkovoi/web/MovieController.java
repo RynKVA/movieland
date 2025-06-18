@@ -26,7 +26,7 @@ public class MovieController {
 
     @GetMapping
     public List<MovieDto> getSortedOrDefaultMovies(@RequestParam(required = false) SortType sortBy,
-                                                   @RequestParam(required = false) SortOrder orderBy) {
+                                                   @RequestParam(required = false, defaultValue = "ASC") SortOrder orderBy) {
         log.info("Get all movies");
         return movieService.getSortedMovies(SortRequest.builder()
                 .sortType(sortBy)

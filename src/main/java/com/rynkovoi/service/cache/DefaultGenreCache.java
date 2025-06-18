@@ -8,25 +8,15 @@ import java.util.List;
 @Cache
 public class DefaultGenreCache implements GenreCache<Genre> {
 
-    private List<Genre> cache;
+    private volatile List<Genre> cache;
 
     @Override
     public void refill(List<Genre> values) {
-        cache = values;
-    }
-
-    @Override
-    public int size() {
-        return cache.size();
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return cache.isEmpty();
+        cache = List.copyOf(values);
     }
 
     @Override
     public List<Genre> getValues() {
-        return cache;
+        return List.copyOf(cache);
     }
 }

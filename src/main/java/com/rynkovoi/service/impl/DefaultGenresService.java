@@ -8,11 +8,13 @@ import com.rynkovoi.service.cache.GenreCache;
 import com.rynkovoi.web.dto.GenreDto;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class DefaultGenresService implements GenreService {
@@ -29,22 +31,12 @@ public class DefaultGenresService implements GenreService {
     @PostConstruct
     @Scheduled(fixedRate = 4 * 60 * 60 * 1000)
     private void updateCache() {
-        cache.refill(genreRepository.getAllGenres());
+        try {
+            List<Genre> allGenres = genreRepository.getAllGenres();
+            cache.refill(allGenres);
+            log.info("Genre cache updated successfully with {} genres.", allGenres.size());
+        } catch (Exception e) {
+            log.error("Failed to update genre cache: {}", e.getMessage(), e);
+        }
     }
 }
-
-//    @Override
-//    public GenreDto getGenre(int id) {
-//        return genresMapper.toGenreDto(cache.getValues().stream()
-//                .filter(genre -> genre.getId() == id)
-//                .findFirst()
-//                .orElseThrow(() -> new GenreNotFoundException("Genre not found with id: %s".formatted(id))));
-//    }
-
-//    public Integer getGenreIdByName(String name) {
-//        return cache.getValues().stream()
-//                .filter(genre -> genre.getName().equalsIgnoreCase(name))
-//                .map(Genre::getId)
-//                .findFirst()
-//                .orElseThrow(() -> new GenreNotFoundException("Genre not found with name: %s".formatted(name)));
-//    }

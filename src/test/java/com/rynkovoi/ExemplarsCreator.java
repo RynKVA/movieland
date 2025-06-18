@@ -37,6 +37,18 @@ public class ExemplarsCreator {
         );
     }
 
+    public static List<MovieDto> createMovieDtoListWithFourMoviesSortedByPriceOrderAsc() {
+        return List.of(
+                createMovieDtoBuilder().id(1L).build(),
+                createMovieDtoBuilder().id(3L).nameNative("Movie 3").nameRussian("Фильм 3")
+                        .yearOfRelease(2022).rating(7.5).price(12.0).picturePath("path/to/picture3.jpg").build(),
+                createMovieDtoBuilder().id(2L).nameNative("Movie 2").nameRussian("Фильм 2")
+                        .yearOfRelease(2021).rating(9.0).price(15.0).picturePath("path/to/picture2.jpg").build(),
+                createMovieDtoBuilder().id(4L).nameNative("Movie 4").nameRussian("Фильм 4")
+                        .yearOfRelease(2023).rating(8.0).price(20.0).picturePath("path/to/picture4.jpg").build()
+        );
+    }
+
     public static Movie.MovieBuilder createMovieBuilder() {
         return Movie.builder()
                 .id(1L)

@@ -5,7 +5,10 @@ import com.rynkovoi.mapper.MovieMapper;
 import com.rynkovoi.model.Movie;
 import com.rynkovoi.properties.MovieRandomProperties;
 import com.rynkovoi.repository.MovieRepository;
+import com.rynkovoi.type.SortType;
 import com.rynkovoi.web.dto.MovieDto;
+import com.rynkovoi.web.request.SortRequest;
+import org.jooq.SortOrder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,6 +20,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -115,95 +119,53 @@ class DefaultMovieServiceTest {
         verify(movieMapper).toMovieDto(movieListWithThreeMoviesWithSameGenreId);
     }
 
-//    @Test
-//    void whenGetSortedMoviesWithNoParameters_thenReturnDefaultAllMovies() {
-//        SortRequest request = SortRequest.builder()
-//                .sortType(null)
-//                .sortOrder(null)
-//                .build();
-//
-//        when(movieServiceSpy.getAllMovies())
-//                .thenReturn(ExemplarsCreator.createMovieDtoListWithThreeMovies());
-//
-//        List<MovieDto> sortedMovies = movieServiceSpy.getSortedMovies(request);
-//
-//        assertEquals(3, sortedMovies.size());
-//        assertEquals("Movie 1", sortedMovies.get(0).getNameNative());
-//        assertEquals("Movie 2", sortedMovies.get(1).getNameNative());
-//        assertEquals("Movie 3", sortedMovies.get(2).getNameNative());
-//        verify(movieServiceSpy).getAllMovies();
-//    }
-//
-//    @Test
-//    void whenGetSortedMoviesWithSortedByNullAndOrderByASC_thenReturnDefaultAllMovies() {
-//        SortRequest request = SortRequest.builder()
-//                .sortType(null)
-//                .sortOrder(SortOrder.ASC)
-//                .build();
-//        when(movieServiceSpy.getAllMovies())
-//                .thenReturn(ExemplarsCreator.createMovieDtoListWithThreeMovies());
-//
-//        List<MovieDto> sortedMovies = movieServiceSpy.getSortedMovies(request);
-//
-//        assertEquals(3, sortedMovies.size());
-//        assertEquals("Movie 1", sortedMovies.get(0).getNameNative());
-//        assertEquals("Movie 2", sortedMovies.get(1).getNameNative());
-//        assertEquals("Movie 3", sortedMovies.get(2).getNameNative());
-//        verify(movieServiceSpy).getAllMovies();
-//    }
-//
-//    @Test
-//    void whenGetSortedMoviesWithSortedByPriceAndOrderByNull_thenReturnSortedListByDefaultOrderASC() {
-//        SortRequest request = SortRequest.builder()
-//                .sortType(SortType.PRICE)
-//                .sortOrder(null)
-//                .build();
-//
-//        when(movieServiceSpy.getAllMovies())
-//                .thenReturn(ExemplarsCreator.createMovieDtoListWithThreeMovies());
-//
-//        List<MovieDto> sortedMovies = movieServiceSpy.getSortedMovies(request);
-//
-//        assertEquals(3, sortedMovies.size());
-//        assertEquals(10, sortedMovies.get(0).getPrice());
-//        assertEquals(12, sortedMovies.get(1).getPrice());
-//        assertEquals(15, sortedMovies.get(2).getPrice());
-//        verify(movieServiceSpy).getAllMovies();
-//    }
-//
-//    @Test
-//    void whenGetSortedMoviesWithSortedByPriceAndOrderByASC_thenReturnSortedList() {
-//        SortRequest request = SortRequest.builder()
-//                .sortType(SortType.PRICE)
-//                .sortOrder(SortOrder.ASC)
-//                .build();
-//        when(movieServiceSpy.getAllMovies())
-//                .thenReturn(ExemplarsCreator.createMovieDtoListWithThreeMovies());
-//
-//        List<MovieDto> sortedMovies = movieServiceSpy.getSortedMovies(request);
-//
-//        assertEquals(3, sortedMovies.size());
-//        assertEquals(10, sortedMovies.get(0).getPrice());
-//        assertEquals(12, sortedMovies.get(1).getPrice());
-//        assertEquals(15, sortedMovies.get(2).getPrice());
-//        verify(movieServiceSpy).getAllMovies();
-//    }
-//
-//    @Test
-//    void whenGetSortedMoviesWithSortedByRatingAndOrderByDESC_thenReturnSortedList() {
-//        SortRequest request = SortRequest.builder()
-//                .sortType(SortType.RATING)
-//                .sortOrder(SortOrder.DESC)
-//                .build();
-//        when(movieRepository.getSortedMovies(request))
-//                .thenReturn(ExemplarsCreator.crea());
-//
-//        List<MovieDto> sortedMovies = movieServiceSpy.getSortedMovies(request);
-//
-//        assertEquals(3, sortedMovies.size());
-//        assertEquals(9.0, sortedMovies.get(0).getRating());
-//        assertEquals(8.5, sortedMovies.get(1).getRating());
-//        assertEquals(7.5, sortedMovies.get(2).getRating());
-//        verify(movieServiceSpy).getAllMovies();
-//    }
+    @Test
+    void whenGetSortedMoviesWithNoParams_thenReturnDefaultAllMovies() {
+        SortRequest request = SortRequest.builder()
+                .sortType(null)
+                .sortOrder(null)
+                .build();
+
+        when(movieServiceSpy.getAllMovies())
+                .thenReturn(ExemplarsCreator.createMovieDtoListWithThreeMovies());
+
+        List<MovieDto> sortedMovies = movieServiceSpy.getSortedMovies(request);
+        assertEquals(3, sortedMovies.size());
+        assertEquals("Movie 1", sortedMovies.getFirst().getNameNative());
+        assertEquals("Movie 2", sortedMovies.get(1).getNameNative());
+        assertEquals("Movie 3", sortedMovies.get(2).getNameNative());
+    }
+
+    @Test
+    void whenGetSortedMoviesWithSortedByNullAndOrderByASC_thenReturnDefaultAllMovies() {
+        SortRequest request = SortRequest.builder()
+                .sortType(null)
+                .sortOrder(SortOrder.ASC)
+                .build();
+
+        when(movieServiceSpy.getAllMovies())
+                .thenReturn(ExemplarsCreator.createMovieDtoListWithThreeMovies());
+
+        List<MovieDto> sortedMovies = movieServiceSpy.getSortedMovies(request);
+        assertEquals(3, sortedMovies.size());
+        assertEquals("Movie 1", sortedMovies.getFirst().getNameNative());
+        assertEquals("Movie 2", sortedMovies.get(1).getNameNative());
+        assertEquals("Movie 3", sortedMovies.get(2).getNameNative());
+    }
+
+    @Test
+    void whenGetSortedMoviesWithSortedByPriceAndOrderByNull_thenReturnSortedListByDefaultOrderASC() {
+        SortRequest request = SortRequest.builder()
+                .sortType(SortType.PRICE)
+                .sortOrder(SortOrder.ASC)
+                .build();
+        when(movieMapper.toMovieDto(anyList())).thenReturn(ExemplarsCreator.createMovieDtoListWithFourMoviesSortedByPriceOrderAsc());
+
+        List<MovieDto> sortedMovies = movieServiceSpy.getSortedMovies(request);
+        assertEquals(4, sortedMovies.size());
+        assertEquals(10, sortedMovies.getFirst().getPrice());
+        assertEquals(12, sortedMovies.get(1).getPrice());
+        assertEquals(15, sortedMovies.get(2).getPrice());
+        assertEquals(20, sortedMovies.get(3).getPrice());
+    }
 }

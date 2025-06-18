@@ -16,7 +16,7 @@ import static org.jooq.impl.DSL.table;
 @Repository
 @RequiredArgsConstructor
 public class MovieRepository {
-    private static final Field<?>[] MOVIE_FIELDS = new Field<?>[] {
+    private static final Field<?>[] MOVIE_FIELDS = new Field<?>[]{
             field("id"),
             field("name_native"),
             field("name_russian"),
@@ -28,7 +28,6 @@ public class MovieRepository {
             field("price"),
             field("poster")
     };
-
     private final DSLContext context;
 
     public List<Movie> getAllMovies() {
@@ -52,43 +51,3 @@ public class MovieRepository {
                 .from(table("public.movies"));
     }
 }
-
-
-//    public void save(List<MoviesRecord> movies) {
-//        context.batch(movies.stream()
-//                        .map(movie -> context.insertInto(MOVIES)
-//                                .set(MOVIES.NAME_NATIVE, movie.getNameNative())
-//                                .set(MOVIES.NAME_RUSSIAN, movie.getNameRussian())
-//                                .set(MOVIES.YEAR_OF_RELEASE, movie.getYearOfRelease())
-//                                .set(MOVIES.RELEASE_COUNTRY, movie.getReleaseCountry())
-//                                .set(MOVIES.GENRES, movie.getGenres())
-//                                .set(MOVIES.DESCRIPTION, movie.getDescription())
-//                                .set(MOVIES.RATING, movie.getRating())
-//                                .set(MOVIES.PRICE, movie.getPrice())
-//                                .set(MOVIES.POSTER, movie.getPoster())
-//                        ).toList())
-//                .execute();
-//    }
-//
-//    public List<MoviesRecord> getAllMovies() {
-//        return context.selectFrom(MOVIES)
-//                .fetch();
-//    }
-//
-//    public MoviesRecord getMovieById(long id) {
-//        return context.selectFrom(MOVIES)
-//                .where(MOVIES.ID.eq(id))
-//                .fetchOne();
-//    }
-//
-//    public List<MoviesRecord> getMoviesByGenreId(int genreId) {
-//        return context.selectFrom(MOVIES)
-//                .where(MOVIES.GENRES.contains(new Integer[]{genreId}))
-//                .fetch();
-//    }
-//
-//    public Long getMovieIdByName(String nameNative) {
-//        return context.selectFrom(MOVIES)
-//                .where(MOVIES.NAME_NATIVE.eq(nameNative))
-//                .fetchAny(MOVIES.ID);
-//    }

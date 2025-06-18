@@ -18,8 +18,8 @@ class DefaultGenreCacheTest {
 
         cache.refill(ExemplarsCreator.createGenreListWithThreeGenres());
 
-        assertEquals(3, cache.size());
-        assertFalse(cache.isEmpty());
+        assertEquals(3, cache.getValues().size());
+        assertFalse(cache.getValues().isEmpty());
     }
 
     @Test

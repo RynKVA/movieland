@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 @Service
@@ -49,26 +50,11 @@ public class DefaultMovieService implements MovieService {
 
     @Override
     public List<MovieDto> getSortedMovies(SortRequest sortRequest) {
-        if (sortRequest.getSortType() != null) {
+        if (Objects.nonNull(sortRequest.getSortType())) {
             log.info("Sorting movies by: {} with order by {}", sortRequest.getSortType().name(), sortRequest.getSortOrder().name());
             return movieMapper.toMovieDto(movieRepository.getSortedMovies(sortRequest));
         }
         log.info("No sorting applied");
         return getAllMovies();
     }
-
-//    @Override
-//    public void saveParsedMovies(MultipartFile movies, MultipartFile posters) {
-//        try {
-//            save(movieMapper.toMovieRecords(fileParser.parseMovieFromFile(movies, posters)));
-//            log.debug("Saving parsed movies from file: {}", movies.getOriginalFilename());
-//        } catch (IOException e) {
-//            log.error("Error parsing file: {}", movies.getOriginalFilename(), e);
-//            throw new RuntimeException("Error parsing file", e);
-//        }
-//    }
-//
-//    private void save(List<MoviesRecord> movies) {
-//        movieRepository.save(movies);
-//    }
 }
