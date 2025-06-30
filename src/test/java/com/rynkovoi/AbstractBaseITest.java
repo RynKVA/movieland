@@ -3,10 +3,12 @@ package com.rynkovoi;
 import com.github.database.rider.core.api.configuration.DBUnit;
 import com.github.database.rider.core.api.configuration.Orthography;
 import com.github.database.rider.spring.api.DBRider;
+import com.rynkovoi.configuration.DataSourceWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.containers.PostgreSQLContainer;
@@ -24,6 +26,7 @@ import java.nio.charset.StandardCharsets;
 @DBRider
 @SpringBootTest
 @Testcontainers
+@Import(DataSourceWrapper.class)
 @DBUnit(
         cacheConnection = false,
         columnSensing = true,
@@ -38,7 +41,6 @@ public class AbstractBaseITest {
     private static final PostgreSQLContainer<?> POSTGRES_SQL_CONTAINER = new PostgreSQLContainer<>("postgres:15");
 
     static {
-        System.out.println("static block");
         POSTGRES_SQL_CONTAINER.start();
     }
 

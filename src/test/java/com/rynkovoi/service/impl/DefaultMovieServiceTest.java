@@ -51,7 +51,7 @@ class DefaultMovieServiceTest {
     @Test
     void whenUseGetAllMovies_thenReturnAllMovies() {
         List<Movie> movies = List.of();
-        when(movieRepository.getAllMovies()).thenReturn(movies);
+        when(movieRepository.getAll()).thenReturn(movies);
         when(movieMapper.toMovieDto(movies)).thenReturn(ExemplarsCreator.createMovieDtoListWithThreeMovies());
 
         List<MovieDto> allMovies = movieService.getAllMovies();
@@ -60,7 +60,7 @@ class DefaultMovieServiceTest {
         assertEquals("Movie 2", allMovies.get(1).getNameNative());
         assertEquals("Movie 3", allMovies.get(2).getNameNative());
 
-        verify(movieRepository).getAllMovies();
+        verify(movieRepository).getAll();
         verify(movieMapper).toMovieDto(movies);
     }
 

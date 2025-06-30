@@ -1,6 +1,7 @@
-package com.rynkovoi.repository;
+package com.rynkovoi.repository.impl;
 
 import com.rynkovoi.model.Movie;
+import com.rynkovoi.repository.MovieRepository;
 import com.rynkovoi.web.request.SortRequest;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
@@ -15,7 +16,7 @@ import static org.jooq.impl.DSL.table;
 
 @Repository
 @RequiredArgsConstructor
-public class MovieRepository {
+public class JooqMovieRepository implements MovieRepository {
     private static final Field<?>[] MOVIE_FIELDS = new Field<?>[]{
             field("id"),
             field("name_native"),
@@ -30,16 +31,19 @@ public class MovieRepository {
     };
     private final DSLContext context;
 
-    public List<Movie> getAllMovies() {
+    @Override
+    public List<Movie> getAll() {
         return selectFromMovies().fetchInto(Movie.class);
     }
 
+    @Override
     public List<Movie> getMoviesByGenreId(int genreId) {
         return selectFromMovies()
                 .where(field("genres", Integer[].class).contains(new Integer[]{genreId}))
                 .fetchInto(Movie.class);
     }
 
+    @Override
     public List<Movie> getSortedMovies(SortRequest sortRequest) {
         return selectFromMovies()
                 .orderBy(field(sortRequest.getSortType().name()).sort(sortRequest.getSortOrder()))

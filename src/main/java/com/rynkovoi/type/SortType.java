@@ -12,11 +12,11 @@ public enum SortType {
     RATING("rating"),
     PRICE("price");
 
-    private final String filterBy;
+    private final String name;
 
-    public static SortType fromString(String filterBy) {
-        return Arrays.stream(SortType.values()).filter(sortByType -> sortByType.getFilterBy().equalsIgnoreCase(filterBy))
+    public static SortType fromString(String sortTypeString) {
+        return Arrays.stream(SortType.values()).filter(sortByType -> sortByType.getName().equalsIgnoreCase(sortTypeString))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("No type found for filterBy: %s".formatted(filterBy)));
+                .orElseThrow(() -> new IllegalArgumentException("No type found for filterBy: %s".formatted(sortTypeString)));
     }
 }

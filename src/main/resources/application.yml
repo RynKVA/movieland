@@ -2,8 +2,8 @@ server:
   port: ${PORT:3001}
 
 spring:
-  dataSource:
-    url: ${URL_DB:jdbc:postgresql://movieland-pg:5432/movieland}
+  datasource:
+    url: ${URL_DB:jdbc:postgresql://localhost:5432/movieland}
     username: ${DB_USER:postgres}
     password: ${DB_PASSWORD:postgres}
     driver-class-name: org.postgresql.Driver
@@ -19,4 +19,4 @@ logging:
 
 movie:
   random:
-    countOfMovies: 3
+    count-of-movies: 3

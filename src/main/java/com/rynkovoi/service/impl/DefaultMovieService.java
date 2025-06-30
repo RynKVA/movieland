@@ -26,7 +26,7 @@ public class DefaultMovieService implements MovieService {
 
     @Override
     public List<MovieDto> getAllMovies() {
-        return movieMapper.toMovieDto(movieRepository.getAllMovies());
+        return movieMapper.toMovieDto(movieRepository.getAll());
     }
 
     @Override
