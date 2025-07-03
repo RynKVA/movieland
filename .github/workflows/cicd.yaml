@@ -43,6 +43,9 @@ jobs:
    needs: build
 
    steps:
+     - name: Checkout code
+       uses: actions/checkout@v4
+
      - name: Show all files recursively
        run: find . -name Dockerfile
 
