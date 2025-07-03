@@ -30,7 +30,9 @@ jobs:
           distribution: 'temurin'
 
       - name: Build JAR
-        run: ./gradlew clean bootJar
+        run: |
+          chmod +x gradlew
+          ./gradlew clean bootJar
 
   dockerise:
    runs-on: ubuntu-latest
