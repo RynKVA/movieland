@@ -33,7 +33,7 @@ jobs:
         run: sudo chmod +x gradlew
 
       - name: Build JAR
-        run: ./gradlew clean bootJar
+        run: ./gradlew clean test bootJar
 
   dockerise:
    runs-on: ubuntu-latest
