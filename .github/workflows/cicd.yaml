@@ -49,11 +49,11 @@ jobs:
          username: ${{ secrets.DOCKERHUB_USERNAME }}
          password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
-     - name: Fix Dockerfile permissions
-       run: chmod 644 Dockerfile
-
      - name: Show files
        run: ls -la
+
+     - name: Fix Dockerfile permissions
+       run: chmod 644 Dockerfile
 
      - name: Build and push Docker image
        uses: docker/build-push-action@v5
