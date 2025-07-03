@@ -43,7 +43,7 @@ jobs:
             build/libs/*.jar
             Dockerfile
 
-  dockerisze:
+  dockerize:
    runs-on: ubuntu-latest
    needs: build
 
