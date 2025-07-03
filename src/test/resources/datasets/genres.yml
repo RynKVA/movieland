@@ -1,8 +1,12 @@
 genres:
   - name: "Genre A"
+    id: 1
 
   - name: "Genre B"
+    id: 2
 
   - name: "Genre C"
+    id: 3
 
   - name: "Genre D"
+    id: 4

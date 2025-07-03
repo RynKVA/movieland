@@ -7,7 +7,7 @@ COPY gradle gradle
 COPY build.gradle .
 COPY src src
 RUN chmod +x gradlew
-RUN ./gradlew bootJar
+RUN ./gradlew test bootJar
 
 # Runtime
 FROM eclipse-temurin:22-jre-alpine

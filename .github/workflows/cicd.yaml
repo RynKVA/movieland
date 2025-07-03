@@ -38,6 +38,10 @@
       deploy:
         runs-on: ubuntu-latest
         needs: docker
+        env:
+          URL_DB: ${{ secrets.URL_DB }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
 
         steps:
           - name: Deploy via SSH and run docker-compose
