@@ -7,7 +7,6 @@ import com.rynkovoi.web.dto.MovieDto;
 import com.rynkovoi.web.request.SortRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.jooq.SortOrder;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

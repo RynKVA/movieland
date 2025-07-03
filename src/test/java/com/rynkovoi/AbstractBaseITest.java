@@ -52,7 +52,5 @@ public class AbstractBaseITest {
             throw new RuntimeException("Unable to find file: " + jsonPath, e);
         }
     }
-
-
 }
 
