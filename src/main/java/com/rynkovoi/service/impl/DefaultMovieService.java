@@ -1,13 +1,14 @@
 package com.rynkovoi.service.impl;
 
-import com.rynkovoi.mapper.MovieMapper;
-import com.rynkovoi.properties.MovieRandomProperties;
+import com.rynkovoi.mapper.CommonMapper;
+import com.rynkovoi.properties.MovieProperties;
 import com.rynkovoi.repository.MovieRepository;
 import com.rynkovoi.service.MovieService;
 import com.rynkovoi.web.dto.MovieDto;
 import com.rynkovoi.web.request.SortRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -21,40 +22,41 @@ import java.util.Objects;
 public class DefaultMovieService implements MovieService {
 
     private final MovieRepository movieRepository;
-    private final MovieMapper movieMapper;
-    private final MovieRandomProperties movieRandomProperties;
+    private final CommonMapper mapper;
+    private final MovieProperties movieProperties;
 
     @Override
-    public List<MovieDto> getAllMovies() {
-        return movieMapper.toMovieDto(movieRepository.getAll());
+    public List<MovieDto> getAll() {
+        return mapper.toMovieDtos(movieRepository.findAll());
     }
 
     @Override
-    public List<MovieDto> getRandomMovies() {
-        int count = movieRandomProperties.getCountOfMovies();
+    public List<MovieDto> getRandom() {
+        int count = movieProperties.getRandomCount();
         log.info("Generating {} random movies", count);
-        List<MovieDto> allMovies = new ArrayList<>(getAllMovies());
+        List<MovieDto> allMovies = new ArrayList<>(getAll());
         if (allMovies.size() <= count) {
             return allMovies;
         }
         Collections.shuffle(allMovies);
         List<MovieDto> randomMovies = allMovies.subList(0, count);
-        log.info("Getting random movies: {}", movieMapper.toMovieNames(randomMovies));
+        log.info("Getting random movies: {}", mapper.toMovieNames(randomMovies));
         return randomMovies;
     }
 
     @Override
-    public List<MovieDto> getMoviesByGenreId(int genreId) {
-        return movieMapper.toMovieDto(movieRepository.getMoviesByGenreId(genreId));
+    public List<MovieDto> getByGenreId(int genreId) {
+        return mapper.toMovieDtos(movieRepository.findByGenresId(genreId));
     }
 
     @Override
     public List<MovieDto> getSortedMovies(SortRequest sortRequest) {
         if (Objects.nonNull(sortRequest.getSortType())) {
-            log.info("Sorting movies by: {} with order by {}", sortRequest.getSortType().name(), sortRequest.getSortOrder().name());
-            return movieMapper.toMovieDto(movieRepository.getSortedMovies(sortRequest));
+            log.info("Sorting movies by: {} with order by {}", sortRequest.getSortType().name(), sortRequest.getOrderType().name());
+            Sort sort = Sort.by(Sort.Direction.fromString(sortRequest.getOrderType().name()), sortRequest.getSortType().getName());
+            return mapper.toMovieDtos(movieRepository.findAll(sort));
         }
         log.info("No sorting applied");
-        return getAllMovies();
+        return getAll();
     }
 }

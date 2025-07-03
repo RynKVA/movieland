@@ -21,7 +21,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
-@ActiveProfiles("test")
+@ActiveProfiles({"test", "jpa"})
 @AutoConfigureMockMvc(addFilters = false)
 @DBRider
 @SpringBootTest

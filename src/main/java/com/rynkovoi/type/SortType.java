@@ -15,8 +15,8 @@ public enum SortType {
     private final String name;
 
     public static SortType fromString(String sortTypeString) {
-        return Arrays.stream(SortType.values()).filter(sortByType -> sortByType.getName().equalsIgnoreCase(sortTypeString))
+        return Arrays.stream(SortType.values()).filter(sortType -> sortType.getName().equalsIgnoreCase(sortTypeString))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("No type found for filterBy: %s".formatted(sortTypeString)));
+                .orElseThrow(() -> new IllegalArgumentException("No type found for sorting: %s".formatted(sortTypeString)));
     }
 }

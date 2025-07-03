@@ -1,5 +1,5 @@
 logging:
   level:
-    io.routerra: DEBUG
+    root: DEBUG
     com.github.database.rider: DEBUG
     org.dbunit: WARN

@@ -10,8 +10,8 @@ import org.springframework.context.annotation.Configuration;
 @Setter
 @ToString
 @Configuration
-@ConfigurationProperties(prefix = "movie.random")
-public class MovieRandomProperties {
+@ConfigurationProperties(prefix = "movie")
+public class MovieProperties {
 
-    private int countOfMovies;
+    private int randomCount;
 }

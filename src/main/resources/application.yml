@@ -2,13 +2,13 @@ server:
   port: ${PORT:3001}
 
 spring:
+  profiles:
+    active: jpa
   datasource:
     url: ${URL_DB:jdbc:postgresql://localhost:5432/movieland}
     username: ${DB_USER:postgres}
     password: ${DB_PASSWORD:postgres}
     driver-class-name: org.postgresql.Driver
-  jooq:
-    sql-dialect: POSTGRES
   flyway:
     enabled: true
     locations: classpath:db/migration
@@ -18,5 +18,27 @@ logging:
     root: debug
 
 movie:
-  random:
-    count-of-movies: 3
+  random-count: 3
+
+genre:
+  cache:
+    update:
+      interval-hours: 4
+
+---
+spring:
+  config:
+    activate:
+      on-profile: jooq
+  jooq:
+    sql-dialect: POSTGRES
+
+---
+spring:
+  config:
+    activate:
+      on-profile: jpa
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true

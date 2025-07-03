@@ -2,17 +2,15 @@ movies:
   - id: 1
     name_native: "The Shawshank Redemption"
     name_russian: "Побег из Шоушенка"
-    release_country: "USA"
     year_of_release: 1994
     rating: 8.9
     price: 345.67
     description: "Two imprisoned"
-    poster: "https://images-na.ssl-images-amazon.com/images/M/MV5BODU4MjU4NjIwNl5BMl5BanBnXkFtZTgwMDU2MjEyMDE@._V1._SY209_CR0,0,140,209_.jpg"
+    poster: "https://images-na.ssl-images-amazon.com/images/M/MV5BMTY4NzQ3NjA2OF5BMl5BanBnXkFtZTcwNTI0MjEyMQ@@._V1._SY209_CR0,0,140,209_.jpg"
 
   - id: 2
     name_native: "The Godfather"
     name_russian: "Крёстный отец"
-    release_country: "USA"
     year_of_release: 1972
     rating: 9.2
     price: 234.56
@@ -22,7 +20,6 @@ movies:
   - id: 3
     name_native: "The Dark Knight"
     name_russian: "Темный рыцарь"
-    release_country: "USA"
     year_of_release: 2008
     rating: 9.0
     price: 123.45
@@ -32,9 +29,18 @@ movies:
   - id: 4
     name_native: "Pulp Fiction"
     name_russian: "Криминальное чтиво"
-    release_country: "USA"
     year_of_release: 1994
     rating: 8.9
     price: 100.55
     description: "Two imprisoned"
     poster: "https://images-na.ssl-images-amazon.com/images/M/MV5BMTY4NzQ3NjA2OF5BMl5BanBnXkFtZTcwNTI0MjEyMQ@@._V1._SY209_CR0,0,140,209_.jpg"
+
+genres:
+  - id: 1
+    name: "Action"
+
+movies_genres:
+  - movie_id: 1
+    genre_id: 1
+  - movie_id: 4
+    genre_id: 1

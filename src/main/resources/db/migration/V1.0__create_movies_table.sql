@@ -1,6 +1,6 @@
 -- Movies
 
-create sequence if not exists movies_id_sequence start 1 increment 1;
+create sequence if not exists movies_id_sequence start 1 increment by 50;
 create  table if not exists movies (
 id                            bigint              PRIMARY KEY DEFAULT nextval('movies_id_sequence'),
 name_native                   text,

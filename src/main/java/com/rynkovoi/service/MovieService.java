@@ -7,11 +7,11 @@ import java.util.List;
 
 public interface MovieService {
 
-    List<MovieDto> getAllMovies();
+    List<MovieDto> getAll();
 
-    List<MovieDto> getRandomMovies();
+    List<MovieDto> getRandom();
 
-    List<MovieDto> getMoviesByGenreId(int genreId);
+    List<MovieDto> getByGenreId(int genreId);
 
     List<MovieDto> getSortedMovies(SortRequest request);
 

@@ -1,14 +1,14 @@
 package com.rynkovoi.service.impl;
 
 import com.rynkovoi.ExemplarsCreator;
-import com.rynkovoi.mapper.MovieMapper;
+import com.rynkovoi.mapper.CommonMapper;
 import com.rynkovoi.model.Movie;
-import com.rynkovoi.properties.MovieRandomProperties;
+import com.rynkovoi.properties.MovieProperties;
 import com.rynkovoi.repository.MovieRepository;
+import com.rynkovoi.type.OrderType;
 import com.rynkovoi.type.SortType;
 import com.rynkovoi.web.dto.MovieDto;
 import com.rynkovoi.web.request.SortRequest;
-import org.jooq.SortOrder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,101 +32,101 @@ class DefaultMovieServiceTest {
     private MovieRepository movieRepository;
 
     @Mock
-    private MovieMapper movieMapper;
+    private CommonMapper mapper;
 
     @InjectMocks
     private DefaultMovieService movieService;
 
-    MovieRandomProperties movieRandomProperties;
+    MovieProperties movieProperties;
 
     DefaultMovieService movieServiceSpy;
 
     @BeforeEach
     void setUp() {
-        movieRandomProperties = new MovieRandomProperties();
-        movieRandomProperties.setCountOfMovies(3);
-        movieServiceSpy = spy(new DefaultMovieService(movieRepository, movieMapper, movieRandomProperties));
+        movieProperties = new MovieProperties();
+        movieProperties.setRandomCount(3);
+        movieServiceSpy = spy(new DefaultMovieService(movieRepository, mapper, movieProperties));
     }
 
     @Test
-    void whenUseGetAllMovies_thenReturnAllMovies() {
+    void whenUseGetAllMovies_thenReturnAll() {
         List<Movie> movies = List.of();
-        when(movieRepository.getAll()).thenReturn(movies);
-        when(movieMapper.toMovieDto(movies)).thenReturn(ExemplarsCreator.createMovieDtoListWithThreeMovies());
+        when(movieRepository.findAll()).thenReturn(movies);
+        when(mapper.toMovieDtos(movies)).thenReturn(ExemplarsCreator.createMovieDtoListWithThreeMovies());
 
-        List<MovieDto> allMovies = movieService.getAllMovies();
+        List<MovieDto> allMovies = movieService.getAll();
         assertEquals(3, allMovies.size());
         assertEquals("Movie 1", allMovies.get(0).getNameNative());
         assertEquals("Movie 2", allMovies.get(1).getNameNative());
         assertEquals("Movie 3", allMovies.get(2).getNameNative());
 
-        verify(movieRepository).getAll();
-        verify(movieMapper).toMovieDto(movies);
+        verify(movieRepository).findAll();
+        verify(mapper).toMovieDtos(movies);
     }
 
     @Test
     void whenGetRandomThreeMoviesFromListOfFourMovies_thenReturnThreeRandomMovies() {
         //List of 4 movies
-        when(movieServiceSpy.getAllMovies()).thenReturn(ExemplarsCreator.createMovieDtoListWithFourMovies());
+        when(movieServiceSpy.getAll()).thenReturn(ExemplarsCreator.createMovieDtoListWithFourMovies());
 
-        List<MovieDto> randomThreeMovies = movieServiceSpy.getRandomMovies();
+        List<MovieDto> randomThreeMovies = movieServiceSpy.getRandom();
 
         //List of 3 random movies
         assertEquals(3, randomThreeMovies.size());
-        verify(movieServiceSpy).getAllMovies();
+        verify(movieServiceSpy).getAll();
     }
 
     @Test
     void whenGetRandomThreeMoviesFromListOfThreeMovies_thenReturnThreeRandomMovies() {
         //List of 3 movies
-        when(movieServiceSpy.getAllMovies()).thenReturn(ExemplarsCreator.createMovieDtoListWithThreeMovies());
+        when(movieServiceSpy.getAll()).thenReturn(ExemplarsCreator.createMovieDtoListWithThreeMovies());
 
-        List<MovieDto> randomThreeMovies = movieServiceSpy.getRandomMovies();
+        List<MovieDto> randomThreeMovies = movieServiceSpy.getRandom();
 
         //List of 3 random movies
         assertEquals(3, randomThreeMovies.size());
-        verify(movieServiceSpy).getAllMovies();
+        verify(movieServiceSpy).getAll();
     }
 
     @Test
     void whenGetRandomThreeMoviesFromEmptyList_thenReturnEmptyList() {
         //Empty list of movies
-        when(movieServiceSpy.getAllMovies()).thenReturn(List.of());
+        when(movieServiceSpy.getAll()).thenReturn(List.of());
 
-        List<MovieDto> randomThreeMovies = movieServiceSpy.getRandomMovies();
+        List<MovieDto> randomThreeMovies = movieServiceSpy.getRandom();
 
         //Empty list of random movies
         assertTrue(randomThreeMovies.isEmpty());
-        verify(movieServiceSpy).getAllMovies();
+        verify(movieServiceSpy).getAll();
     }
 
     @Test
-    void whenGetMoviesByGenreId_thenReturnMovieListWithSameGenreId() {
+    void whenGetByGenreId_thenReturnMovieListWithSameGenreId() {
         int genreId = 1;
         List<Movie> movieListWithThreeMoviesWithSameGenreId = ExemplarsCreator.createMovieListWithThreeMoviesWithSameGenreId();
 
-        when(movieRepository.getMoviesByGenreId(genreId)).thenReturn(movieListWithThreeMoviesWithSameGenreId);
-        when(movieMapper.toMovieDto(movieListWithThreeMoviesWithSameGenreId))
+        when(movieRepository.findByGenresId(genreId)).thenReturn(movieListWithThreeMoviesWithSameGenreId);
+        when(mapper.toMovieDtos(movieListWithThreeMoviesWithSameGenreId))
                 .thenReturn(ExemplarsCreator.createMovieDtoListWithThreeMovies());
 
-        List<MovieDto> moviesByGenreId = movieService.getMoviesByGenreId(genreId);
+        List<MovieDto> moviesByGenreId = movieService.getByGenreId(genreId);
 
         assertEquals(3, moviesByGenreId.size());
         assertEquals("Movie 1", moviesByGenreId.get(0).getNameNative());
         assertEquals("Movie 2", moviesByGenreId.get(1).getNameNative());
         assertEquals("Movie 3", moviesByGenreId.get(2).getNameNative());
-        verify(movieRepository).getMoviesByGenreId(genreId);
-        verify(movieMapper).toMovieDto(movieListWithThreeMoviesWithSameGenreId);
+        verify(movieRepository).findByGenresId(genreId);
+        verify(mapper).toMovieDtos(movieListWithThreeMoviesWithSameGenreId);
     }
 
     @Test
     void whenGetSortedMoviesWithNoParams_thenReturnDefaultAllMovies() {
         SortRequest request = SortRequest.builder()
                 .sortType(null)
-                .sortOrder(null)
+                .orderType(null)
                 .build();
 
-        when(movieServiceSpy.getAllMovies())
+        when(movieServiceSpy.getAll())
                 .thenReturn(ExemplarsCreator.createMovieDtoListWithThreeMovies());
 
         List<MovieDto> sortedMovies = movieServiceSpy.getSortedMovies(request);
@@ -140,10 +140,10 @@ class DefaultMovieServiceTest {
     void whenGetSortedMoviesWithSortedByNullAndOrderByASC_thenReturnDefaultAllMovies() {
         SortRequest request = SortRequest.builder()
                 .sortType(null)
-                .sortOrder(SortOrder.ASC)
+                .orderType(OrderType.ASC)
                 .build();
 
-        when(movieServiceSpy.getAllMovies())
+        when(movieServiceSpy.getAll())
                 .thenReturn(ExemplarsCreator.createMovieDtoListWithThreeMovies());
 
         List<MovieDto> sortedMovies = movieServiceSpy.getSortedMovies(request);
@@ -157,9 +157,9 @@ class DefaultMovieServiceTest {
     void whenGetSortedMoviesWithSortedByPriceAndOrderByNull_thenReturnSortedListByDefaultOrderASC() {
         SortRequest request = SortRequest.builder()
                 .sortType(SortType.PRICE)
-                .sortOrder(SortOrder.ASC)
+                .orderType(OrderType.ASC)
                 .build();
-        when(movieMapper.toMovieDto(anyList())).thenReturn(ExemplarsCreator.createMovieDtoListWithFourMoviesSortedByPriceOrderAsc());
+        when(mapper.toMovieDtos(anyList())).thenReturn(ExemplarsCreator.createMovieDtoListWithFourMoviesSortedByPriceOrderAsc());
 
         List<MovieDto> sortedMovies = movieServiceSpy.getSortedMovies(request);
         assertEquals(4, sortedMovies.size());

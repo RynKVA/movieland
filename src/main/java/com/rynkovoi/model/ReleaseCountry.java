@@ -22,16 +22,16 @@ import java.util.List;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "genres")
+@Table(name = "release_countries")
 @Entity
-public class Genre {
+public class ReleaseCountry {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "genres_id_sequence")
-    @SequenceGenerator(name = "genres_id_sequence", sequenceName = "genres_id_sequence")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "release_countries_id_sequence")
+    @SequenceGenerator(name = "release_countries_id_sequence", sequenceName = "release_countries_id_sequence")
     private int id;
     private String name;
 
-    @ManyToMany(mappedBy = "genres")
+    @ManyToMany(mappedBy = "releaseCountries")
     private List<Movie> movies;
 }

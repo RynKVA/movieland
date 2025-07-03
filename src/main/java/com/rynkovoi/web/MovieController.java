@@ -1,6 +1,7 @@
 package com.rynkovoi.web;
 
 import com.rynkovoi.service.MovieService;
+import com.rynkovoi.type.OrderType;
 import com.rynkovoi.type.SortType;
 import com.rynkovoi.web.dto.MovieDto;
 import com.rynkovoi.web.request.SortRequest;
@@ -26,23 +27,23 @@ public class MovieController {
 
     @GetMapping
     public List<MovieDto> getSortedOrDefaultMovies(@RequestParam(required = false) SortType sortBy,
-                                                   @RequestParam(required = false, defaultValue = "ASC") SortOrder orderBy) {
+                                                   @RequestParam(required = false, defaultValue = "ASC") OrderType orderBy) {
         log.info("Get all movies");
         return movieService.getSortedMovies(SortRequest.builder()
                 .sortType(sortBy)
-                .sortOrder(orderBy)
+                .orderType(orderBy)
                 .build());
     }
 
     @GetMapping("/random")
     public List<MovieDto> getRandomThreeMovies() {
         log.info("Get random movies");
-        return movieService.getRandomMovies();
+        return movieService.getRandom();
     }
 
     @GetMapping("genres/{genreId}")
     public List<MovieDto> getMoviesByGenre(@PathVariable int genreId) {
         log.info("Get movies by genre id {}", genreId);
-        return movieService.getMoviesByGenreId(genreId);
+        return movieService.getByGenreId(genreId);
     }
 }

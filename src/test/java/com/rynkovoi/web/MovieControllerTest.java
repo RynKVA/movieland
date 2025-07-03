@@ -2,12 +2,11 @@ package com.rynkovoi.web;
 
 import com.github.database.rider.core.api.dataset.DataSet;
 import com.rynkovoi.AbstractBaseITest;
-import com.rynkovoi.properties.MovieRandomProperties;
+import com.rynkovoi.properties.MovieProperties;
 import com.vladmihalcea.sql.SQLStatementCountValidator;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.jdbc.Sql;
 
 import static org.hamcrest.Matchers.everyItem;
 import static org.hamcrest.Matchers.oneOf;
@@ -21,7 +20,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class MovieControllerTest extends AbstractBaseITest {
 
     @Autowired
-    private MovieRandomProperties movieRandomProperties;
+    private MovieProperties movieProperties;
 
     private static final String ALL_MOVIES_RESPONSE_JSON_PATH = "response/all-movies-response.json";
     private static final String ALL_MOVIES_SORTED_BY_PRICE_RESPONSE_JSON_PATH = "response/all-movies-sorted-by-price-response.json";
@@ -79,7 +78,7 @@ class MovieControllerTest extends AbstractBaseITest {
                 .andExpect(content().json(getResponseAsString(TWO_MOVIES_RESPONSE)))
                 .andExpect(jsonPath("$.length()").value(countOfMovies));
 
-        assertTrue(movieRandomProperties.getCountOfMovies() > countOfMovies);
+        assertTrue(movieProperties.getRandomCount() > countOfMovies);
         SQLStatementCountValidator.assertSelectCount(1);
     }
 
@@ -94,7 +93,7 @@ class MovieControllerTest extends AbstractBaseITest {
                 .andExpect(content().json(getResponseAsString(ALL_MOVIES_RESPONSE_JSON_PATH)))
                 .andExpect(jsonPath("$.length()").value(countOfMovies));
 
-        assertEquals(movieRandomProperties.getCountOfMovies(), countOfMovies);
+        assertEquals(movieProperties.getRandomCount(), countOfMovies);
         SQLStatementCountValidator.assertSelectCount(1);
     }
 
@@ -103,7 +102,7 @@ class MovieControllerTest extends AbstractBaseITest {
     void whenTestGetRandomMoviesWithMoreMoviesThanIndicatedInProperty_thenReturnIndicatedCountOfRandomMovies() throws Exception {
         SQLStatementCountValidator.reset();
         int countOfMovies = 4;
-        int expectedCountOfRandomMovies = movieRandomProperties.getCountOfMovies();
+        int expectedCountOfRandomMovies = movieProperties.getRandomCount();
 
         mockMvc.perform(get("/api/v1/movies/random")
                         .contentType(MediaType.APPLICATION_JSON))
@@ -118,7 +117,7 @@ class MovieControllerTest extends AbstractBaseITest {
     }
 
     @Test
-    @Sql("classpath:datasets/all_movies.sql")
+    @DataSet(value = "datasets/four-movies.yml", cleanBefore = true, cleanAfter = true, skipCleaningFor = "flyway_schema_history")
     void whenTestGetMoviesByGenre_thenReturnCorrespondingMovies() throws Exception {
         SQLStatementCountValidator.reset();
         int genreId = 1;
@@ -133,7 +132,7 @@ class MovieControllerTest extends AbstractBaseITest {
     }
 
     @Test
-    @Sql("classpath:datasets/all_movies.sql")
+    @DataSet(value = "datasets/four-movies.yml", cleanBefore = true, cleanAfter = true, skipCleaningFor = "flyway_schema_history")
     void whenTestGetMoviesByGenreWithNotExistingGenreId_thenReturnEmptyList() throws Exception {
         SQLStatementCountValidator.reset();
         int genreId = 10;
