@@ -33,8 +33,7 @@ public class User {
 
     private String username;
     private String email;
-    private String firstName;
-    private String lastName;
+    private String password;
 
     @OneToMany(mappedBy = "user")
     private List<Review> reviews;

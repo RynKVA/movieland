@@ -3,10 +3,9 @@
 create sequence if not exists users_id_sequence start 1 increment by 50;
 create table if not exists users (
     id                            bigint              PRIMARY KEY DEFAULT nextval('users_id_sequence'),
-    username                      varchar(50)         NOT NULL UNIQUE,
+    password                      varchar(50)         NOT NULL UNIQUE,
     email                         varchar(100)        NOT NULL UNIQUE,
-    first_name                    varchar(50),
-    last_name                     varchar(50)
+    username                      varchar(50)         NOT NULL
 );
 
 --Reviews
