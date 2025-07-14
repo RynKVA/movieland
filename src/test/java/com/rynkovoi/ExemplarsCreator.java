@@ -1,11 +1,13 @@
 package com.rynkovoi;
 
+import com.rynkovoi.common.response.MovieResponse;
 import com.rynkovoi.model.Genre;
 import com.rynkovoi.model.Movie;
 import com.rynkovoi.model.ReleaseCountry;
-import com.rynkovoi.web.dto.GenreDto;
-import com.rynkovoi.web.dto.MovieDto;
+import com.rynkovoi.common.dto.GenreDto;
+import com.rynkovoi.common.dto.MovieDto;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public class ExemplarsCreator {
@@ -59,7 +61,7 @@ public class ExemplarsCreator {
                 .yearOfRelease(2020)
                 .genres(createGenreListWithThreeGenres())
                 .rating(8.5)
-                .price(10.0)
+                .price(BigDecimal.valueOf(10.0))
                 .description("Description of Movie 1")
                 .releaseCountries(createReleaseCountryListWithThreeCountries());
     }
@@ -74,7 +76,7 @@ public class ExemplarsCreator {
                         .yearOfRelease(2021)
                         .genres(createGenreListWithThreeGenres())
                         .rating(9.0)
-                        .price(15.0)
+                        .price(BigDecimal.valueOf(15.0))
                         .description("Description of Movie 2")
                         .releaseCountries(createReleaseCountryListWithThreeCountries())
                         .build(),
@@ -85,7 +87,7 @@ public class ExemplarsCreator {
                         .yearOfRelease(2022)
                         .genres(createGenreListWithThreeGenres())
                         .rating(7.5)
-                        .price(12.0)
+                        .price(BigDecimal.valueOf(12.0))
                         .description("Description of Movie 3")
                         .releaseCountries(createReleaseCountryListWithThreeCountries())
                         .build()
@@ -125,5 +127,16 @@ public class ExemplarsCreator {
                 ReleaseCountry.builder().id(2).name("UK").build(),
                 ReleaseCountry.builder().id(3).name("France").build()
         );
+    }
+
+    public static MovieResponse.MovieResponseBuilder createMovieResponseBuilder() {
+        return MovieResponse.builder()
+                .id(1L)
+                .nameNative("Movie 1")
+                .nameRussian("Фильм 1")
+                .yearOfRelease(2020)
+                .rating(8.5)
+                .price(BigDecimal.valueOf(10.99))
+                .picturePath("path/to/picture1.jpg");
     }
 }

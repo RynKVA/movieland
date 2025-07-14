@@ -44,3 +44,22 @@ movies_genres:
     genre_id: 1
   - movie_id: 4
     genre_id: 1
+
+release_countries:
+  - id: 1
+    name: "USA"
+
+movies_release_countries:
+  - movie_id: 1
+    release_country_id: 1
+
+users:
+  - id: 1
+    username: "john_doe"
+    email: "email.com.ua"
+
+reviews:
+  - id: 1
+    movie_id: 1
+    user_id: 1
+    text: "An amazing movie with a great story."

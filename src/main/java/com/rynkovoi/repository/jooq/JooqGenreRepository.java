@@ -1,8 +1,8 @@
-package com.rynkovoi.repository.impl.jooq;
+package com.rynkovoi.repository.jooq;
 
 
-import com.rynkovoi.model.Genre;
 import com.rynkovoi.repository.GenreRepository;
+import com.rynkovoi.common.dto.GenreDto;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.springframework.context.annotation.Profile;
@@ -21,9 +21,9 @@ public class JooqGenreRepository implements GenreRepository {
     private final DSLContext context;
 
     @Override
-    public List<Genre> findAll() {
+    public List<GenreDto> findAllDto() {
         return context.select(field("id"), field("name"))
                 .from(table("public.genres"))
-                .fetchInto(Genre.class);
+                .fetchInto(GenreDto.class);
     }
 }

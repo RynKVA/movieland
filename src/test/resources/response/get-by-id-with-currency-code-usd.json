@@ -1,0 +1,33 @@
+{
+  "id":1,
+  "nameNative":"The Shawshank Redemption",
+  "nameRussian":"Побег из Шоушенка",
+  "yearOfRelease":1994,
+  "description":"Two imprisoned",
+  "rating":8.9,
+  "price":8.3,
+  "picturePath":"https://images-na.ssl-images-amazon.com/images/M/MV5BMTY4NzQ3NjA2OF5BMl5BanBnXkFtZTcwNTI0MjEyMQ@@._V1._SY209_CR0,0,140,209_.jpg",
+  "countries":[
+    {
+      "id":1,
+      "name":"USA"
+    }
+  ],
+  "genres":[
+    {
+      "id":1,
+      "name":"Action"
+    }
+  ],
+  "reviews":[
+    {
+      "id":1,
+      "user":
+      {
+        "id":1,
+        "username":"john_doe"
+      },
+      "text":"An amazing movie with a great story."
+    }
+  ]
+}

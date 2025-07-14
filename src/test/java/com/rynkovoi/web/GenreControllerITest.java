@@ -2,7 +2,7 @@ package com.rynkovoi.web;
 
 import com.github.database.rider.core.api.dataset.DataSet;
 import com.rynkovoi.AbstractBaseITest;
-import com.rynkovoi.repository.impl.CachedGenreRepository;
+import com.rynkovoi.repository.cache.CachedGenreRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

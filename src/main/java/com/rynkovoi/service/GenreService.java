@@ -1,6 +1,6 @@
 package com.rynkovoi.service;
 
-import com.rynkovoi.web.dto.GenreDto;
+import com.rynkovoi.common.dto.GenreDto;
 
 import java.util.List;
 

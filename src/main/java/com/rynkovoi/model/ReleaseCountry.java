@@ -4,7 +4,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -13,8 +12,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-
-import java.util.List;
 
 @Getter
 @Setter
@@ -31,7 +28,4 @@ public class ReleaseCountry {
     @SequenceGenerator(name = "release_countries_id_sequence", sequenceName = "release_countries_id_sequence")
     private int id;
     private String name;
-
-    @ManyToMany(mappedBy = "releaseCountries")
-    private List<Movie> movies;
 }

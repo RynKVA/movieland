@@ -15,15 +15,17 @@ spring:
 
 logging:
   level:
-    root: debug
+    root: info
 
 movie:
   random-count: 3
 
-genre:
-  cache:
-    update:
-      interval-hours: 4
+
+cache:
+  update:
+    interval-hours: 4
+  delay:
+    interval-hours: 4
 
 ---
 spring:

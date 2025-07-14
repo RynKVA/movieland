@@ -1,8 +1,8 @@
-package com.rynkovoi.repository.impl.jooq;
+package com.rynkovoi.repository.jooq;
 
 import com.rynkovoi.model.Movie;
 import com.rynkovoi.repository.MovieRepository;
-import com.rynkovoi.web.request.SortRequest;
+import com.rynkovoi.common.MovieFilter;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.jooq.Field;
@@ -13,6 +13,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.jooq.impl.DSL.field;
 import static org.jooq.impl.DSL.table;
@@ -36,27 +37,32 @@ public class JooqMovieRepository implements MovieRepository {
     private final DSLContext context;
 
     @Override
-    public List<Movie> findAll() {
-        return selectFromMovies().fetchInto(Movie.class);
-    }
-
-    @Override
     public List<Movie> findByGenresId(int genreId) {
         return selectFromMovies()
                 .where(field("genres", Integer[].class).contains(new Integer[]{genreId}))
                 .fetchInto(Movie.class);
     }
 
-//    @Override
-    public List<Movie> getSortedMovies(SortRequest sortRequest) {
+    @Override
+    public List<Movie> findRandom(int randomCount) {
+        return List.of();
+    }
+
+    //    @Override
+    public List<Movie> getSortedMovies(MovieFilter movieFilter) {
         return selectFromMovies()
-                .orderBy(field(sortRequest.getSortType().name()).sort(SortOrder.valueOf(sortRequest.getOrderType().name())))
+                .orderBy(field(movieFilter.getSortType().name()).sort(SortOrder.valueOf(movieFilter.getSortDirection().name())))
                 .fetchInto(Movie.class);
     }
 
     @Override
     public List<Movie> findAll(Sort sort) {
         return List.of();
+    }
+
+    @Override
+    public Optional<Movie> findById(Long id) {
+        return Optional.empty();
     }
 
     private SelectJoinStep<org.jooq.Record> selectFromMovies() {

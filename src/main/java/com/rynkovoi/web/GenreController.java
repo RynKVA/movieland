@@ -1,7 +1,7 @@
 package com.rynkovoi.web;
 
 import com.rynkovoi.service.GenreService;
-import com.rynkovoi.web.dto.GenreDto;
+import com.rynkovoi.common.dto.GenreDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;

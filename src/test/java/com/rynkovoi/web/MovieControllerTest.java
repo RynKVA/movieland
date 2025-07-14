@@ -27,10 +27,12 @@ class MovieControllerTest extends AbstractBaseITest {
     private static final String ALL_MOVIES_SORTED_BY_RATING_DESC_RESPONSE_JSON_PATH = "response/all-movies-sorted-by-rating-desc-response.json";
     private static final String TWO_MOVIES_RESPONSE = "response/random-two-movies-response.json";
     private static final String GET_MOVIES_BY_GENRE_ID = "response/get-movies-by-genre-id-response.json";
+    private static final String GET_MOVIES_BY_ID = "response/get-by-id.json";
+    private static final String GET_MOVIES_BY_ID_AND_CURRENCY_CODE_USD = "response/get-by-id-with-currency-code-usd.json";
 
     @Test
     @DataSet(value = "datasets/three-movies.yml", cleanBefore = true, cleanAfter = true, skipCleaningFor = "flyway_schema_history")
-    void whenGetSortedOrDefaultMoviesNoParamsProvided_thenReturnAllMoviesWithoutSorting() throws Exception {
+    void whenGetAllNoParamsProvided_thenReturnAllMoviesWithoutSorting() throws Exception {
         SQLStatementCountValidator.reset();
         mockMvc.perform(get("/api/v1/movies")
                         .contentType(MediaType.APPLICATION_JSON))
@@ -42,11 +44,11 @@ class MovieControllerTest extends AbstractBaseITest {
 
     @Test
     @DataSet(value = "datasets/three-movies.yml", cleanBefore = true, cleanAfter = true, skipCleaningFor = "flyway_schema_history")
-    void whenGetSortedOrDefaultMoviesWithSortingByPriceAndOrderByASC_thenReturnAllMoviesSortedByPrice() throws Exception {
+    void whenGetAllWithSortingByPriceAndOrderByASC_thenReturnAllMoviesSortedByPrice() throws Exception {
         SQLStatementCountValidator.reset();
         mockMvc.perform(get("/api/v1/movies")
-                        .param("sortBy", "PRICE")
-                        .param("orderBy", "ASC")
+                        .param("sortType", "PRICE")
+                        .param("direction", "ASC")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().json(getResponseAsString(ALL_MOVIES_SORTED_BY_PRICE_RESPONSE_JSON_PATH), true));
@@ -55,11 +57,11 @@ class MovieControllerTest extends AbstractBaseITest {
 
     @Test
     @DataSet(value = "datasets/three-movies.yml", cleanBefore = true, cleanAfter = true, skipCleaningFor = "flyway_schema_history")
-    void whenGetSortedOrDefaultMoviesWithSortingByRatingOrderByDESC_thenReturnAllMoviesSortedByRatingOrderByDESC() throws Exception {
+    void whenGetAllWithSortingByRatingOrderByDESC_thenReturnAllMoviesSortedByRatingOrderByDESC() throws Exception {
         SQLStatementCountValidator.reset();
         mockMvc.perform(get("/api/v1/movies")
-                        .param("sortBy", "RATING")
-                        .param("orderBy", "DESC")
+                        .param("sortType", "RATING")
+                        .param("direction", "DESC")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().json(getResponseAsString(ALL_MOVIES_SORTED_BY_RATING_DESC_RESPONSE_JSON_PATH), true));
@@ -144,4 +146,36 @@ class MovieControllerTest extends AbstractBaseITest {
 
         SQLStatementCountValidator.assertSelectCount(1);
     }
+
+    @Test
+    @DataSet(value = "datasets/four-movies.yml", cleanBefore = true, cleanAfter = true, skipCleaningFor = "flyway_schema_history")
+    void whenTestGetById_thenReturnMovieResponse() throws Exception {
+
+        SQLStatementCountValidator.reset();
+        long movieId = 1;
+
+        mockMvc.perform(get("/api/v1/movies/{movieId}", movieId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().json(getResponseAsString(GET_MOVIES_BY_ID)));
+
+        SQLStatementCountValidator.assertSelectCount(4);
+    }
+
+    @Test
+    @DataSet(value = "datasets/four-movies.yml", cleanBefore = true, cleanAfter = true, skipCleaningFor = "flyway_schema_history")
+    void whenTestGetByIdAndCurrencyCodeUSD_thenReturnMovieResponseWithPriceUSD() throws Exception {
+
+        SQLStatementCountValidator.reset();
+        long movieId = 1;
+
+        mockMvc.perform(get("/api/v1/movies/{movieId}", movieId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .param("currency", "USD"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(getResponseAsString(GET_MOVIES_BY_ID_AND_CURRENCY_CODE_USD)));
+
+        SQLStatementCountValidator.assertSelectCount(4);
+    }
+
 }

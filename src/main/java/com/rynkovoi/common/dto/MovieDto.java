@@ -1,4 +1,4 @@
-package com.rynkovoi.web.dto;
+package com.rynkovoi.common.dto;
 
 import lombok.Builder;
 import lombok.Getter;

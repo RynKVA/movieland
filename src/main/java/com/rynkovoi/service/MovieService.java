@@ -1,18 +1,19 @@
 package com.rynkovoi.service;
 
-import com.rynkovoi.web.dto.MovieDto;
-import com.rynkovoi.web.request.SortRequest;
+import com.rynkovoi.type.CurrencyCode;
+import com.rynkovoi.common.dto.MovieDto;
+import com.rynkovoi.common.MovieFilter;
+import com.rynkovoi.common.response.MovieResponse;
 
 import java.util.List;
 
 public interface MovieService {
 
-    List<MovieDto> getAll();
+    List<MovieDto> getAll(MovieFilter request);
 
     List<MovieDto> getRandom();
 
     List<MovieDto> getByGenreId(int genreId);
 
-    List<MovieDto> getSortedMovies(SortRequest request);
-
+    MovieResponse getById(long id, CurrencyCode currency);
 }

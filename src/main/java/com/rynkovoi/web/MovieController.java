@@ -1,10 +1,12 @@
 package com.rynkovoi.web;
 
 import com.rynkovoi.service.MovieService;
-import com.rynkovoi.type.OrderType;
+import com.rynkovoi.type.CurrencyCode;
+import com.rynkovoi.type.SortDirection;
 import com.rynkovoi.type.SortType;
-import com.rynkovoi.web.dto.MovieDto;
-import com.rynkovoi.web.request.SortRequest;
+import com.rynkovoi.common.dto.MovieDto;
+import com.rynkovoi.common.MovieFilter;
+import com.rynkovoi.common.response.MovieResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -25,23 +27,30 @@ public class MovieController {
     private final MovieService movieService;
 
     @GetMapping
-    public List<MovieDto> getSortedOrDefaultMovies(@RequestParam(required = false) SortType sortBy,
-                                                   @RequestParam(required = false, defaultValue = "ASC") OrderType orderBy) {
+    public List<MovieDto> getAll(@RequestParam(required = false) SortType sortType,
+                                 @RequestParam(required = false, defaultValue = "ASC") SortDirection direction) {
         log.info("Get all movies");
-        return movieService.getSortedMovies(SortRequest.builder()
-                .sortType(sortBy)
-                .orderType(orderBy)
+        return movieService.getAll(MovieFilter.builder()
+                .sortType(sortType)
+                .sortDirection(direction)
                 .build());
     }
 
+    @GetMapping("/{id}")
+    public MovieResponse getById(@PathVariable long id,
+                                 @RequestParam(defaultValue = "UAH") CurrencyCode currency) {
+        log.info("Get movie by id {}", id);
+        return movieService.getById(id, currency);
+    }
+
     @GetMapping("/random")
-    public List<MovieDto> getRandomThreeMovies() {
+    public List<MovieDto> getRandom() {
         log.info("Get random movies");
         return movieService.getRandom();
     }
 
     @GetMapping("genres/{genreId}")
-    public List<MovieDto> getMoviesByGenre(@PathVariable int genreId) {
+    public List<MovieDto> getByGenre(@PathVariable int genreId) {
         log.info("Get movies by genre id {}", genreId);
         return movieService.getByGenreId(genreId);
     }

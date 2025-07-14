@@ -4,12 +4,15 @@ import com.rynkovoi.model.Movie;
 import org.springframework.data.domain.Sort;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface MovieRepository {
 
-    List<Movie> findAll();
+    List<Movie> findAll(Sort sort);
+
+    Optional<Movie> findById(Long id);
 
     List<Movie> findByGenresId(int genreId);
 
-    List<Movie> findAll(Sort sort);
+    List<Movie> findRandom(int randomCount);
 }

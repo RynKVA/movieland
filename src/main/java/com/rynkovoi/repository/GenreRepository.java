@@ -1,9 +1,10 @@
 package com.rynkovoi.repository;
 
-import com.rynkovoi.model.Genre;
+import com.rynkovoi.common.dto.GenreDto;
 
 import java.util.List;
 
 public interface GenreRepository {
-    List<Genre> findAll();
+
+    List<GenreDto> findAllDto();
 }
