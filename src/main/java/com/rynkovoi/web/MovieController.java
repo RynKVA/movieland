@@ -1,12 +1,13 @@
 package com.rynkovoi.web;
 
+import com.rynkovoi.common.MovieFilter;
+import com.rynkovoi.common.dto.MovieDto;
+import com.rynkovoi.common.dto.PageWrapper;
+import com.rynkovoi.common.response.MovieResponse;
 import com.rynkovoi.service.MovieService;
 import com.rynkovoi.type.CurrencyCode;
 import com.rynkovoi.type.SortDirection;
 import com.rynkovoi.type.SortType;
-import com.rynkovoi.common.dto.MovieDto;
-import com.rynkovoi.common.MovieFilter;
-import com.rynkovoi.common.response.MovieResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -27,12 +28,18 @@ public class MovieController {
     private final MovieService movieService;
 
     @GetMapping
-    public List<MovieDto> getAll(@RequestParam(required = false) SortType sortType,
-                                 @RequestParam(required = false, defaultValue = "ASC") SortDirection direction) {
+    public PageWrapper<MovieDto> getAll(@RequestParam(required = false) SortType sortType,
+                                        @RequestParam(required = false, defaultValue = "ASC") SortDirection direction,
+                                        @RequestParam(required = false, defaultValue = "0") int page,
+                                        @RequestParam(required = false, defaultValue = "10") int size,
+                                        @RequestParam(required = false) String searchText) {
         log.info("Get all movies");
         return movieService.getAll(MovieFilter.builder()
                 .sortType(sortType)
                 .sortDirection(direction)
+                .page(page)
+                .size(size)
+                .searchText(searchText)
                 .build());
     }
 

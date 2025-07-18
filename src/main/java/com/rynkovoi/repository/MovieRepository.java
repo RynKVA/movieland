@@ -12,6 +12,8 @@ public interface MovieRepository {
 
     Optional<Movie> findById(Long id);
 
+    Optional<Movie> findByIdWithNestedData(Long id);
+
     List<Movie> findByGenresId(int genreId);
 
     List<Movie> findRandom(int randomCount);

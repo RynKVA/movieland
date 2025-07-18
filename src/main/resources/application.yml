@@ -20,12 +20,16 @@ logging:
 movie:
   random-count: 3
 
-
 cache:
   update:
     interval-hours: 4
-  delay:
-    interval-hours: 4
+  delay: 4
+
+currency:
+  nbu-exchange-url: https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?json
+  cache:
+    update-interval: 12
+    delay: 12
 
 ---
 spring:

@@ -1,45 +1,53 @@
 package com.rynkovoi.repository.cache;
 
+import com.rynkovoi.common.dto.NbuCurrencyRate;
 import com.rynkovoi.repository.CurrencyRateRepository;
 import com.rynkovoi.type.CurrencyCode;
-import com.rynkovoi.common.dto.NbuCurrencyRate;
+import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.client.RestClient;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 
+@Slf4j
 @Repository
-public class CachedCurrencyRateRepository extends AbstractCachedRepository<NbuCurrencyRate> implements CurrencyRateRepository {
+@RequiredArgsConstructor
+public class CachedCurrencyRateRepository implements CurrencyRateRepository {
 
-    private static final String NBU_API_URL = "https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?json";
-    private final RestTemplate restTemplate = new RestTemplate();
-
-    @Override
-    protected List<NbuCurrencyRate> fillCache() {
-        return getRatesFromNbu();
-    }
+    private final RestClient restClient;
+    private final Map<String, NbuCurrencyRate> cache = new ConcurrentHashMap<>();
 
     @Override
     public BigDecimal getRateByCurrencyCode(CurrencyCode currencyCode) {
-        return findAllDto().stream()
-                .filter(rate -> rate.getCurrencyCode().equalsIgnoreCase(currencyCode.name()))
-                .map(NbuCurrencyRate::getCurrencyRate)
-                .findFirst()
-                .orElse(BigDecimal.ONE);
+        return cache.get(currencyCode.name()).getCurrencyRate();
+    }
+
+    @PostConstruct
+    @Scheduled(fixedRateString = "${currency.cache.update-interval}",
+            initialDelayString = "${currency.cache.delay}",
+            timeUnit = TimeUnit.HOURS)
+    void updateCache() {
+        List<NbuCurrencyRate> rates = getRatesFromNbu();
+        for (NbuCurrencyRate rate : rates) {
+            cache.put(rate.getCurrencyCode(), rate);
+        }
+        log.info("Currency cache updated: {}", cache.size());
     }
 
     private List<NbuCurrencyRate> getRatesFromNbu() {
-        ResponseEntity<List<NbuCurrencyRate>> response = restTemplate.exchange(
-                NBU_API_URL,
-                HttpMethod.GET,
-                null,
-                new ParameterizedTypeReference<>() {
-                }
-        );
+        ResponseEntity<List<NbuCurrencyRate>> response = restClient.get()
+                .retrieve()
+                .toEntity(new ParameterizedTypeReference<List<NbuCurrencyRate>>() {
+                });
         return response.getBody();
     }
 }

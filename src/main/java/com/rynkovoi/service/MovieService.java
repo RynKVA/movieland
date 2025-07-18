@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface MovieService {
 
-    List<MovieDto> getAll(MovieFilter request);
+    PageWrapper<MovieDto> getAll(MovieFilter request);
 
     List<MovieDto> getRandom();
 

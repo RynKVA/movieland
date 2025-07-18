@@ -65,6 +65,11 @@ public class JooqMovieRepository implements MovieRepository {
         return Optional.empty();
     }
 
+    @Override
+    public Optional<Movie> findByIdWithNestedData(Long id) {
+        return Optional.empty();
+    }
+
     private SelectJoinStep<org.jooq.Record> selectFromMovies() {
         return context.select(MOVIE_FIELDS)
                 .from(table("public.movies"));

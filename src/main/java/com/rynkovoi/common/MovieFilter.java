@@ -10,4 +10,7 @@ import lombok.Getter;
 public class MovieFilter {
     private SortType sortType;
     private SortDirection sortDirection;
+    private int page;
+    private int size;
+    private String searchText;
 }

@@ -20,7 +20,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.math.BigDecimal;
-import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -48,16 +48,16 @@ public class Movie {
     @JoinTable(name = "movies_release_countries",
             joinColumns = @JoinColumn(name = "movie_id"),
             inverseJoinColumns = @JoinColumn(name = "release_country_id"))
-    private List<ReleaseCountry> releaseCountries;
+    private Set<ReleaseCountry> releaseCountries;
 
     @ManyToMany
     @JoinTable(name = "movies_genres",
             joinColumns = @JoinColumn(name = "movie_id"),
             inverseJoinColumns = @JoinColumn(name = "genre_id"))
-    private List<Genre> genres;
+    private Set<Genre> genres;
 
     @OneToMany(mappedBy = "movie", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<Review> reviews;
+    private Set<Review> reviews;
 
     private String description;
     private double rating;

@@ -15,9 +15,6 @@ public class CurrencyConverter {
     private final CurrencyRateRepository repository;
 
     public BigDecimal convert(BigDecimal value, CurrencyCode currencyCode) {
-        if (currencyCode.equals(CurrencyCode.UAH)) {
-            return value;
-        }
         BigDecimal currencyRate = repository.getRateByCurrencyCode(currencyCode);
         return value.divide(currencyRate, 1, RoundingMode.HALF_UP);
     }
