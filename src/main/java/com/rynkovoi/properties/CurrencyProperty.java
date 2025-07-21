@@ -12,6 +12,4 @@ import org.springframework.context.annotation.Configuration;
 public class CurrencyProperty {
 
     private String nbuExchangeUrl;
-    private int cacheUpdateInterval;
-    private int cacheDilay;
 }

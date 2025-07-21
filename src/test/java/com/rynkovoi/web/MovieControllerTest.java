@@ -22,9 +22,10 @@ class MovieControllerTest extends AbstractBaseITest {
     @Autowired
     private MovieProperties movieProperties;
 
-    private static final String ALL_MOVIES_RESPONSE_JSON_PATH = "response/all-movies-response.json";
-    private static final String ALL_MOVIES_SORTED_BY_PRICE_RESPONSE_JSON_PATH = "response/all-movies-sorted-by-price-response.json";
-    private static final String ALL_MOVIES_SORTED_BY_RATING_DESC_RESPONSE_JSON_PATH = "response/all-movies-sorted-by-rating-desc-response.json";
+    private static final String All_MOVIES_RESPONSE_JSON_PATH = "response/all-movies-response.json";
+    private static final String PAGE_MOVIES_RESPONSE_JSON_PATH = "response/page-movies-response.json";
+    private static final String PAGE_MOVIES_SORTED_BY_PRICE_RESPONSE_JSON_PATH = "response/all-movies-sorted-by-price-response.json";
+    private static final String PAGE_MOVIES_SORTED_BY_RATING_DESC_RESPONSE_JSON_PATH = "response/all-movies-sorted-by-rating-desc-response.json";
     private static final String TWO_MOVIES_RESPONSE = "response/random-two-movies-response.json";
     private static final String GET_MOVIES_BY_GENRE_ID = "response/get-movies-by-genre-id-response.json";
     private static final String GET_MOVIES_BY_ID = "response/get-by-id.json";
@@ -37,9 +38,9 @@ class MovieControllerTest extends AbstractBaseITest {
         mockMvc.perform(get("/api/v1/movies")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().json(getResponseAsString(ALL_MOVIES_RESPONSE_JSON_PATH)));
+                .andExpect(content().json(getResponseAsString(PAGE_MOVIES_RESPONSE_JSON_PATH)));
 
-        SQLStatementCountValidator.assertSelectCount(1);
+        SQLStatementCountValidator.assertSelectCount(2);
     }
 
     @Test
@@ -51,8 +52,8 @@ class MovieControllerTest extends AbstractBaseITest {
                         .param("direction", "ASC")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().json(getResponseAsString(ALL_MOVIES_SORTED_BY_PRICE_RESPONSE_JSON_PATH), true));
-        SQLStatementCountValidator.assertSelectCount(1);
+                .andExpect(content().json(getResponseAsString(PAGE_MOVIES_SORTED_BY_PRICE_RESPONSE_JSON_PATH), true));
+        SQLStatementCountValidator.assertSelectCount(2);
     }
 
     @Test
@@ -64,8 +65,8 @@ class MovieControllerTest extends AbstractBaseITest {
                         .param("direction", "DESC")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().json(getResponseAsString(ALL_MOVIES_SORTED_BY_RATING_DESC_RESPONSE_JSON_PATH), true));
-        SQLStatementCountValidator.assertSelectCount(1);
+                .andExpect(content().json(getResponseAsString(PAGE_MOVIES_SORTED_BY_RATING_DESC_RESPONSE_JSON_PATH), true));
+        SQLStatementCountValidator.assertSelectCount(2);
     }
 
     @Test
@@ -92,7 +93,7 @@ class MovieControllerTest extends AbstractBaseITest {
         mockMvc.perform(get("/api/v1/movies/random")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().json(getResponseAsString(ALL_MOVIES_RESPONSE_JSON_PATH)))
+                .andExpect(content().json(getResponseAsString(All_MOVIES_RESPONSE_JSON_PATH)))
                 .andExpect(jsonPath("$.length()").value(countOfMovies));
 
         assertEquals(movieProperties.getRandomCount(), countOfMovies);
@@ -159,7 +160,7 @@ class MovieControllerTest extends AbstractBaseITest {
                 .andExpect(status().isOk())
                 .andExpect(content().json(getResponseAsString(GET_MOVIES_BY_ID)));
 
-        SQLStatementCountValidator.assertSelectCount(4);
+        SQLStatementCountValidator.assertSelectCount(1);
     }
 
     @Test
@@ -175,7 +176,7 @@ class MovieControllerTest extends AbstractBaseITest {
                 .andExpect(status().isOk())
                 .andExpect(content().json(getResponseAsString(GET_MOVIES_BY_ID_AND_CURRENCY_CODE_USD)));
 
-        SQLStatementCountValidator.assertSelectCount(4);
+        SQLStatementCountValidator.assertSelectCount(1);
     }
 
 }

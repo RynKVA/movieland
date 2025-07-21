@@ -3,6 +3,8 @@ package com.rynkovoi.common.dto;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.math.BigDecimal;
+
 @Getter
 @Builder
 public class MovieDto {
@@ -12,7 +14,7 @@ public class MovieDto {
     private String nameRussian;
     private int yearOfRelease;
     private double rating;
-    private double price;
+    private BigDecimal price;
     private String picturePath;
 
 }

@@ -33,7 +33,8 @@ public class MovieController {
                                         @RequestParam(required = false, defaultValue = "0") int page,
                                         @RequestParam(required = false, defaultValue = "10") int size,
                                         @RequestParam(required = false) String searchText) {
-        log.info("Get all movies");
+        log.info("Get all movies sorted by {} in {} direction, page {}, size {}, searchText '{}'",
+                sortType, direction, page, size, searchText);
         return movieService.getAll(MovieFilter.builder()
                 .sortType(sortType)
                 .sortDirection(direction)

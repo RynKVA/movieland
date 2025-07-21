@@ -32,9 +32,7 @@ public class CachedCurrencyRateRepository implements CurrencyRateRepository {
     }
 
     @PostConstruct
-    @Scheduled(fixedRateString = "${currency.cache.update-interval}",
-            initialDelayString = "${currency.cache.delay}",
-            timeUnit = TimeUnit.HOURS)
+    @Scheduled(cron = "0 0 0 * * ?")
     void updateCache() {
         List<NbuCurrencyRate> rates = getRatesFromNbu();
         for (NbuCurrencyRate rate : rates) {

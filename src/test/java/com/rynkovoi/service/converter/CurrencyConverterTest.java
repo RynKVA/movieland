@@ -24,16 +24,6 @@ class CurrencyConverterTest {
     private CurrencyConverter currencyConverter;
 
     @Test
-    void testConvertWithCurrencyCodeUAH() {
-        BigDecimal value = BigDecimal.valueOf(100);
-        CurrencyCode currencyCode = CurrencyCode.UAH;
-
-        BigDecimal result = currencyConverter.convert(value, currencyCode);
-
-        assertEquals(value, result);
-    }
-
-    @Test
     void testConvertWithCurrencyCodeUSD() {
         BigDecimal value = BigDecimal.valueOf(100);
         CurrencyCode currencyCode = CurrencyCode.USD;

@@ -57,6 +57,7 @@ users:
   - id: 1
     username: "john_doe"
     email: "email.com.ua"
+    password: "123qwe"
 
 reviews:
   - id: 1

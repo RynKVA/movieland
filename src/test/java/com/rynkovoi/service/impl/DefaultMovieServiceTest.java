@@ -3,11 +3,13 @@ package com.rynkovoi.service.impl;
 import com.rynkovoi.ExemplarsCreator;
 import com.rynkovoi.common.MovieFilter;
 import com.rynkovoi.common.dto.MovieDto;
+import com.rynkovoi.common.dto.PageWrapper;
 import com.rynkovoi.common.response.MovieResponse;
 import com.rynkovoi.exception.MovieNotFoundException;
 import com.rynkovoi.mapper.CommonMapper;
 import com.rynkovoi.model.Movie;
 import com.rynkovoi.properties.MovieProperties;
+import com.rynkovoi.repository.CriteriaMovieRepository;
 import com.rynkovoi.repository.MovieRepository;
 import com.rynkovoi.service.converter.CurrencyConverter;
 import com.rynkovoi.type.CurrencyCode;
@@ -19,7 +21,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -28,7 +31,6 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -40,6 +42,9 @@ class DefaultMovieServiceTest {
     private MovieRepository movieRepository;
 
     @Mock
+    private CriteriaMovieRepository criteriaMovieRepository;
+
+    @Mock
     private CommonMapper mapper;
 
     @Mock
@@ -48,33 +53,36 @@ class DefaultMovieServiceTest {
     @InjectMocks
     private DefaultMovieService movieService;
 
-    private DefaultMovieService movieServiceSpy;
-
     private MovieFilter movieFilter;
 
     @BeforeEach
     void setUp() {
         MovieProperties movieProperties = new MovieProperties();
         movieProperties.setRandomCount(3);
-        movieServiceSpy = spy(new DefaultMovieService(movieRepository, currencyConverter, mapper, movieProperties));
+        DefaultMovieService movieServiceSpy = spy(new DefaultMovieService(criteriaMovieRepository, movieRepository, currencyConverter, mapper, movieProperties));
 
         movieFilter = MovieFilter.builder().build();
     }
 
     @Test
-    void whenUseGetAllMovies_thenReturnAll() {
-        List<Movie> movies = List.of();
-        when(movieRepository.findAll(Sort.unsorted())).thenReturn(movies);
-        when(mapper.toMovieDtos(movies)).thenReturn(ExemplarsCreator.createMovieDtoListWithThreeMovies());
+    void whenUseGetAllMovies_thenReturnPageWrapper() {
+        when(criteriaMovieRepository.findAll(movieFilter))
+                .thenReturn(new PageImpl<>(ExemplarsCreator.createMovieListWithThreeMoviesWithSameGenreId(), PageRequest.of(0, 5), 3));
+        when(mapper.toMovieDtos(any())).thenReturn(ExemplarsCreator.createMovieDtoListWithThreeMovies());
 
-        List<MovieDto> allMovies = movieService.getAll(movieFilter);
-        assertEquals(3, allMovies.size());
-        assertEquals("Movie 1", allMovies.get(0).getNameNative());
-        assertEquals("Movie 2", allMovies.get(1).getNameNative());
-        assertEquals("Movie 3", allMovies.get(2).getNameNative());
+        PageWrapper<MovieDto> pageWrapper = movieService.getAll(movieFilter);
 
-        verify(movieRepository).findAll(Sort.unsorted());
-        verify(mapper).toMovieDtos(movies);
+        List<MovieDto> content = pageWrapper.getContent();
+        assertEquals(3, content.size());
+        assertEquals("Movie 1", content.get(0).getNameNative());
+        assertEquals("Movie 2", content.get(1).getNameNative());
+        assertEquals("Movie 3", content.get(2).getNameNative());
+        assertEquals(3, pageWrapper.getTotalElements());
+        assertEquals(1, pageWrapper.getTotalPages());
+        assertEquals(0, pageWrapper.getCurrentPage());
+
+        verify(criteriaMovieRepository).findAll(movieFilter);
+        verify(mapper).toMovieDtos(any());
     }
 
     @Test
@@ -103,16 +111,23 @@ class DefaultMovieServiceTest {
                 .sortDirection(null)
                 .build();
 
-        when(movieRepository.findAll(any()))
-                .thenReturn(ExemplarsCreator.createMovieListWithThreeMoviesWithSameGenreId());
-        when(mapper.toMovieDtos(anyList()))
-                .thenReturn(ExemplarsCreator.createMovieDtoListWithThreeMovies());
+        when(criteriaMovieRepository.findAll(request))
+                .thenReturn(new PageImpl<>(ExemplarsCreator.createMovieListWithThreeMoviesWithSameGenreId(), PageRequest.of(0, 5), 3));
+        when(mapper.toMovieDtos(any())).thenReturn(ExemplarsCreator.createMovieDtoListWithThreeMovies());
 
-        List<MovieDto> sortedMovies = movieServiceSpy.getAll(request);
-        assertEquals(3, sortedMovies.size());
-        assertEquals("Movie 1", sortedMovies.getFirst().getNameNative());
-        assertEquals("Movie 2", sortedMovies.get(1).getNameNative());
-        assertEquals("Movie 3", sortedMovies.get(2).getNameNative());
+        PageWrapper<MovieDto> pageWrapper = movieService.getAll(request);
+
+        List<MovieDto> content = pageWrapper.getContent();
+        assertEquals(3, content.size());
+        assertEquals("Movie 1", content.get(0).getNameNative());
+        assertEquals("Movie 2", content.get(1).getNameNative());
+        assertEquals("Movie 3", content.get(2).getNameNative());
+        assertEquals(3, pageWrapper.getTotalElements());
+        assertEquals(1, pageWrapper.getTotalPages());
+        assertEquals(0, pageWrapper.getCurrentPage());
+
+        verify(criteriaMovieRepository).findAll(request);
+        verify(mapper).toMovieDtos(any());
     }
 
     @Test
@@ -122,16 +137,23 @@ class DefaultMovieServiceTest {
                 .sortDirection(SortDirection.ASC)
                 .build();
 
-        when(movieRepository.findAll(any()))
-                .thenReturn(ExemplarsCreator.createMovieListWithThreeMoviesWithSameGenreId());
-        when(mapper.toMovieDtos(anyList()))
-                .thenReturn(ExemplarsCreator.createMovieDtoListWithThreeMovies());
+        when(criteriaMovieRepository.findAll(request))
+                .thenReturn(new PageImpl<>(ExemplarsCreator.createMovieListWithThreeMoviesWithSameGenreId(), PageRequest.of(0, 5), 3));
+        when(mapper.toMovieDtos(any())).thenReturn(ExemplarsCreator.createMovieDtoListWithThreeMovies());
 
-        List<MovieDto> sortedMovies = movieServiceSpy.getAll(request);
-        assertEquals(3, sortedMovies.size());
-        assertEquals("Movie 1", sortedMovies.getFirst().getNameNative());
-        assertEquals("Movie 2", sortedMovies.get(1).getNameNative());
-        assertEquals("Movie 3", sortedMovies.get(2).getNameNative());
+        PageWrapper<MovieDto> pageWrapper = movieService.getAll(request);
+
+        List<MovieDto> content = pageWrapper.getContent();
+        assertEquals(3, content.size());
+        assertEquals("Movie 1", content.get(0).getNameNative());
+        assertEquals("Movie 2", content.get(1).getNameNative());
+        assertEquals("Movie 3", content.get(2).getNameNative());
+        assertEquals(3, pageWrapper.getTotalElements());
+        assertEquals(1, pageWrapper.getTotalPages());
+        assertEquals(0, pageWrapper.getCurrentPage());
+
+        verify(criteriaMovieRepository).findAll(request);
+        verify(mapper).toMovieDtos(any());
     }
 
     @Test
@@ -140,14 +162,25 @@ class DefaultMovieServiceTest {
                 .sortType(SortType.PRICE)
                 .sortDirection(SortDirection.ASC)
                 .build();
-        when(mapper.toMovieDtos(anyList())).thenReturn(ExemplarsCreator.createMovieDtoListWithFourMoviesSortedByPriceOrderAsc());
+        when(criteriaMovieRepository.findAll(request))
+                .thenReturn(new PageImpl<>(ExemplarsCreator.createMovieListWithFourMoviesSortedByPriceOrderAsc(), PageRequest.of(0, 5), 4));
+        when(mapper.toMovieDtos(any())).thenReturn(ExemplarsCreator.createMovieDtoListWithFourMoviesSortedByPriceOrderAsc());
 
-        List<MovieDto> sortedMovies = movieServiceSpy.getAll(request);
-        assertEquals(4, sortedMovies.size());
-        assertEquals(10, sortedMovies.getFirst().getPrice());
-        assertEquals(12, sortedMovies.get(1).getPrice());
-        assertEquals(15, sortedMovies.get(2).getPrice());
-        assertEquals(20, sortedMovies.get(3).getPrice());
+        PageWrapper<MovieDto> pageWrapper = movieService.getAll(request);
+
+        List<MovieDto> content = pageWrapper.getContent();
+        assertEquals(4, content.size());
+        assertEquals(10, content.getFirst().getPrice());
+        assertEquals(12, content.get(1).getPrice());
+        assertEquals(15, content.get(2).getPrice());
+        assertEquals(20, content.get(3).getPrice());
+        assertEquals(4, pageWrapper.getTotalElements());
+        assertEquals(1, pageWrapper.getTotalPages());
+        assertEquals(0, pageWrapper.getCurrentPage());
+
+        verify(criteriaMovieRepository).findAll(request);
+        verify(mapper).toMovieDtos(any());
+
     }
 
     @Test
@@ -160,7 +193,7 @@ class DefaultMovieServiceTest {
                 .build();
         MovieResponse movieResponse = ExemplarsCreator.createMovieResponseBuilder().build();
 
-        when(movieRepository.findById(movieId)).thenReturn(Optional.of(movie));
+        when(movieRepository.findByIdWithNestedData(movieId)).thenReturn(Optional.of(movie));
         when(currencyConverter.convert(movie.getPrice(), CurrencyCode.USD)).thenReturn(price);
         when(mapper.toMovieResponse(movie, price)).thenReturn(movieResponse);
 
@@ -168,7 +201,29 @@ class DefaultMovieServiceTest {
         assertEquals(movieId, response.getId());
         assertEquals("Movie 1", response.getNameNative());
 
-        verify(movieRepository).findById(movieId);
+        verify(movieRepository).findByIdWithNestedData(movieId);
+        verify(currencyConverter).convert(movie.getPrice(), CurrencyCode.USD);
+        verify(mapper).toMovieResponse(movie, price);
+    }
+
+    @Test
+    void whenGeTByIdWithExistingIdWithDefaultCurrencyCode_thenReturnCorrespondingMovieResponse() {
+        Long movieId = 1L;
+        BigDecimal price = BigDecimal.valueOf(10.99);
+        Movie movie = ExemplarsCreator.createMovieBuilder().id(movieId)
+                .nameNative("Movie 1")
+                .price(price)
+                .build();
+        MovieResponse movieResponse = ExemplarsCreator.createMovieResponseBuilder().build();
+
+        when(movieRepository.findByIdWithNestedData(movieId)).thenReturn(Optional.of(movie));
+        when(mapper.toMovieResponse(movie, price)).thenReturn(movieResponse);
+
+        MovieResponse response = movieService.getById(movieId, CurrencyCode.UAH);
+        assertEquals(movieId, response.getId());
+        assertEquals("Movie 1", response.getNameNative());
+
+        verify(movieRepository).findByIdWithNestedData(movieId);
         verify(mapper).toMovieResponse(movie, price);
     }
 

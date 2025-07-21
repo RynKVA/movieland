@@ -9,6 +9,7 @@ import com.rynkovoi.common.dto.MovieDto;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Set;
 
 public class ExemplarsCreator {
 
@@ -37,6 +38,18 @@ public class ExemplarsCreator {
                         .yearOfRelease(2022).rating(7.5).price(12.0).picturePath("path/to/picture3.jpg").build(),
                 createMovieDtoBuilder().id(4L).nameNative("Movie 4").nameRussian("Фильм 4")
                         .yearOfRelease(2023).rating(8.0).price(20.0).picturePath("path/to/picture4.jpg").build()
+        );
+    }
+
+    public static List<Movie> createMovieListWithFourMoviesSortedByPriceOrderAsc() {
+        return List.of(
+                createMovieBuilder().id(1L).build(),
+                createMovieBuilder().id(3L).nameNative("Movie 3").nameRussian("Фильм 3")
+                        .yearOfRelease(2022).rating(7.5).price(BigDecimal.valueOf( 12.0)).poster("path/to/picture3.jpg").build(),
+                createMovieBuilder().id(2L).nameNative("Movie 2").nameRussian("Фильм 2")
+                        .yearOfRelease(2021).rating(9.0).price(BigDecimal.valueOf(15.0)).poster("path/to/picture2.jpg").build(),
+                createMovieBuilder().id(4L).nameNative("Movie 4").nameRussian("Фильм 4")
+                        .yearOfRelease(2023).rating(8.0).price(BigDecimal.valueOf(20.0)).poster("path/to/picture4.jpg").build()
         );
     }
 
@@ -113,16 +126,16 @@ public class ExemplarsCreator {
                 .name("Action");
     }
 
-    public static List<Genre> createGenreListWithThreeGenres() {
-        return List.of(
+    public static Set<Genre> createGenreListWithThreeGenres() {
+        return Set.of(
                 createGenreBuilder().build(),
                 createGenreBuilder().id(2).name("Comedy").build(),
                 createGenreBuilder().id(3).name("Drama").build()
         );
     }
 
-    public static List<ReleaseCountry> createReleaseCountryListWithThreeCountries() {
-        return List.of(
+    public static Set<ReleaseCountry> createReleaseCountryListWithThreeCountries() {
+        return Set.of(
                 ReleaseCountry.builder().id(1).name("USA").build(),
                 ReleaseCountry.builder().id(2).name("UK").build(),
                 ReleaseCountry.builder().id(3).name("France").build()

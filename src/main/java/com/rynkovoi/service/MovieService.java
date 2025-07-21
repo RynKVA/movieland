@@ -1,5 +1,6 @@
 package com.rynkovoi.service;
 
+import com.rynkovoi.common.dto.PageWrapper;
 import com.rynkovoi.type.CurrencyCode;
 import com.rynkovoi.common.dto.MovieDto;
 import com.rynkovoi.common.MovieFilter;

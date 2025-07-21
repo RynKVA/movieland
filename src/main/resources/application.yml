@@ -27,9 +27,6 @@ cache:
 
 currency:
   nbu-exchange-url: https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?json
-  cache:
-    update-interval: 12
-    delay: 12
 
 ---
 spring:
