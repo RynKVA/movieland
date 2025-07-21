@@ -16,7 +16,6 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Repository
@@ -44,7 +43,7 @@ public class CachedCurrencyRateRepository implements CurrencyRateRepository {
     private List<NbuCurrencyRate> getRatesFromNbu() {
         ResponseEntity<List<NbuCurrencyRate>> response = restClient.get()
                 .retrieve()
-                .toEntity(new ParameterizedTypeReference<List<NbuCurrencyRate>>() {
+                .toEntity(new ParameterizedTypeReference<>() {
                 });
         return response.getBody();
     }

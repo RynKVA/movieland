@@ -170,10 +170,10 @@ class DefaultMovieServiceTest {
 
         List<MovieDto> content = pageWrapper.getContent();
         assertEquals(4, content.size());
-        assertEquals(10, content.getFirst().getPrice());
-        assertEquals(12, content.get(1).getPrice());
-        assertEquals(15, content.get(2).getPrice());
-        assertEquals(20, content.get(3).getPrice());
+        assertEquals(BigDecimal.valueOf(10.0), content.getFirst().getPrice());
+        assertEquals(BigDecimal.valueOf(12.0), content.get(1).getPrice());
+        assertEquals(BigDecimal.valueOf(15.0), content.get(2).getPrice());
+        assertEquals(BigDecimal.valueOf(20.0), content.get(3).getPrice());
         assertEquals(4, pageWrapper.getTotalElements());
         assertEquals(1, pageWrapper.getTotalPages());
         assertEquals(0, pageWrapper.getCurrentPage());

@@ -16,16 +16,16 @@ public class ExemplarsCreator {
     public static MovieDto.MovieDtoBuilder createMovieDtoBuilder() {
         return MovieDto.builder()
                 .id(1L).nameNative("Movie 1").nameRussian("Фильм 1")
-                .yearOfRelease(2020).rating(8.5).price(10.0).picturePath("path/to/picture1.jpg");
+                .yearOfRelease(2020).rating(8.5).price(BigDecimal.valueOf(10.0)).picturePath("path/to/picture1.jpg");
     }
 
     public static List<MovieDto> createMovieDtoListWithThreeMovies() {
         return List.of(
                 createMovieDtoBuilder().id(1L).build(),
                 createMovieDtoBuilder().id(2L).nameNative("Movie 2").nameRussian("Фильм 2")
-                        .yearOfRelease(2021).rating(9.0).price(15.0).picturePath("path/to/picture2.jpg").build(),
+                        .yearOfRelease(2021).rating(9.0).price(BigDecimal.valueOf(15.0)).picturePath("path/to/picture2.jpg").build(),
                 createMovieDtoBuilder().id(3L).nameNative("Movie 3").nameRussian("Фильм 3")
-                        .yearOfRelease(2022).rating(7.5).price(12.0).picturePath("path/to/picture3.jpg").build()
+                        .yearOfRelease(2022).rating(7.5).price(BigDecimal.valueOf(12.0)).picturePath("path/to/picture3.jpg").build()
         );
     }
 
@@ -33,11 +33,11 @@ public class ExemplarsCreator {
         return List.of(
                 createMovieDtoBuilder().id(1L).build(),
                 createMovieDtoBuilder().id(2L).nameNative("Movie 2").nameRussian("Фильм 2")
-                        .yearOfRelease(2021).rating(9.0).price(15.0).picturePath("path/to/picture2.jpg").build(),
+                        .yearOfRelease(2021).rating(9.0).price(BigDecimal.valueOf(15.0)).picturePath("path/to/picture2.jpg").build(),
                 createMovieDtoBuilder().id(3L).nameNative("Movie 3").nameRussian("Фильм 3")
-                        .yearOfRelease(2022).rating(7.5).price(12.0).picturePath("path/to/picture3.jpg").build(),
+                        .yearOfRelease(2022).rating(7.5).price(BigDecimal.valueOf(12.0)).picturePath("path/to/picture3.jpg").build(),
                 createMovieDtoBuilder().id(4L).nameNative("Movie 4").nameRussian("Фильм 4")
-                        .yearOfRelease(2023).rating(8.0).price(20.0).picturePath("path/to/picture4.jpg").build()
+                        .yearOfRelease(2023).rating(8.0).price(BigDecimal.valueOf(20.0)).picturePath("path/to/picture4.jpg").build()
         );
     }
 
@@ -57,11 +57,11 @@ public class ExemplarsCreator {
         return List.of(
                 createMovieDtoBuilder().id(1L).build(),
                 createMovieDtoBuilder().id(3L).nameNative("Movie 3").nameRussian("Фильм 3")
-                        .yearOfRelease(2022).rating(7.5).price(12.0).picturePath("path/to/picture3.jpg").build(),
+                        .yearOfRelease(2022).rating(7.5).price(BigDecimal.valueOf(12.0)).picturePath("path/to/picture3.jpg").build(),
                 createMovieDtoBuilder().id(2L).nameNative("Movie 2").nameRussian("Фильм 2")
-                        .yearOfRelease(2021).rating(9.0).price(15.0).picturePath("path/to/picture2.jpg").build(),
+                        .yearOfRelease(2021).rating(9.0).price(BigDecimal.valueOf(15.0)).picturePath("path/to/picture2.jpg").build(),
                 createMovieDtoBuilder().id(4L).nameNative("Movie 4").nameRussian("Фильм 4")
-                        .yearOfRelease(2023).rating(8.0).price(20.0).picturePath("path/to/picture4.jpg").build()
+                        .yearOfRelease(2023).rating(8.0).price(BigDecimal.valueOf(20.0)).picturePath("path/to/picture4.jpg").build()
         );
     }
 
