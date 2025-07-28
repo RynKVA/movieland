@@ -6,6 +6,6 @@ import lombok.Getter;
 @Getter
 @Builder
 public class ReleaseCountryDto {
-    private int id;
-    private String name;
+    private final int id;
+    private final String name;
 }

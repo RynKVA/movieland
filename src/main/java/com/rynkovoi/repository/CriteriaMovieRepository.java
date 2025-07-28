@@ -21,7 +21,10 @@ import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.util.Objects.*;
+import static com.rynkovoi.model.Movie_.description;
+import static com.rynkovoi.model.Movie_.nameNative;
+import static com.rynkovoi.model.Movie_.nameRussian;
+import static java.util.Objects.nonNull;
 
 @Repository
 @RequiredArgsConstructor
@@ -45,11 +48,11 @@ public class CriteriaMovieRepository {
         List<Predicate> predicates = new ArrayList<>();
         String searchText = movieFilter.getSearchText();
         if ((nonNull(searchText) && !searchText.isBlank())) {
-            String likePattern = "%" + searchText.toLowerCase() + "%";
+            String likePattern = String.join(searchText.toLowerCase(), "%", "%");
             predicates.add(criteriaBuilder.or(
-                    criteriaBuilder.like(criteriaBuilder.lower(root.get("nameNative")), likePattern),
-                    criteriaBuilder.like(criteriaBuilder.lower(root.get("nameRussian")), likePattern),
-                    criteriaBuilder.like(criteriaBuilder.lower(root.get("description")), likePattern)
+                    criteriaBuilder.like(criteriaBuilder.lower(root.get(nameNative)), likePattern),
+                    criteriaBuilder.like(criteriaBuilder.lower(root.get(nameRussian)), likePattern),
+                    criteriaBuilder.like(criteriaBuilder.lower(root.get(description)), likePattern)
             ));
         }
         return predicates.toArray(new Predicate[0]);

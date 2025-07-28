@@ -17,6 +17,7 @@ logging:
   level:
     root: info
 
+
 movie:
   random-count: 3
 
@@ -26,7 +27,11 @@ cache:
   delay: 4
 
 currency:
-  nbu-exchange-url: https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?json
+  nbu-exchange-url: https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?
+
+jwt:
+  secret-key: YTJkM2Y0ZjViNjc4OTBhYmNkZWYxMjM0NTY3ODkwYWJjZGVm
+  expiration: 3600000 # 1 hour in milliseconds
 
 ---
 spring:
@@ -45,3 +50,9 @@ spring:
     hibernate:
       ddl-auto: none
     show-sql: true
+    properties:
+        hibernate:
+            jdbc.batch_size: 50
+            order_inserts: true
+#            format_sql: true
+

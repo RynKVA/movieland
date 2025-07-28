@@ -10,6 +10,8 @@ public interface MovieRepository {
 
     List<Movie> findAll(Sort sort);
 
+    Movie save(Movie movie);
+
     Optional<Movie> findById(Long id);
 
     Optional<Movie> findByIdWithNestedData(Long id);

@@ -1,10 +1,10 @@
-package com.rynkovoi.repository;
+package com.rynkovoi.service;
 
 import com.rynkovoi.type.CurrencyCode;
 
 import java.math.BigDecimal;
 
-public interface CurrencyRateRepository {
+public interface CurrencyRateService {
 
     BigDecimal getRateByCurrencyCode(CurrencyCode currencyCode);
 }

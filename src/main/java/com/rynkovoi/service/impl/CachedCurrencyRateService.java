@@ -1,7 +1,7 @@
-package com.rynkovoi.repository.cache;
+package com.rynkovoi.service.impl;
 
 import com.rynkovoi.common.dto.NbuCurrencyRate;
-import com.rynkovoi.repository.CurrencyRateRepository;
+import com.rynkovoi.service.CurrencyRateService;
 import com.rynkovoi.type.CurrencyCode;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -9,21 +9,24 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
-@Repository
+@Service
 @RequiredArgsConstructor
-public class CachedCurrencyRateRepository implements CurrencyRateRepository {
+public class CachedCurrencyRateService implements CurrencyRateService {
 
     private final RestClient restClient;
     private final Map<String, NbuCurrencyRate> cache = new ConcurrentHashMap<>();
+    private final static DateTimeFormatter DATA_FORMAT = DateTimeFormatter.ofPattern("yyyyMMdd");
 
     @Override
     public BigDecimal getRateByCurrencyCode(CurrencyCode currencyCode) {
@@ -42,6 +45,10 @@ public class CachedCurrencyRateRepository implements CurrencyRateRepository {
 
     private List<NbuCurrencyRate> getRatesFromNbu() {
         ResponseEntity<List<NbuCurrencyRate>> response = restClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .queryParam("date", LocalDate.now().format(DATA_FORMAT))
+                        .queryParam("json", "")
+                        .build())
                 .retrieve()
                 .toEntity(new ParameterizedTypeReference<>() {
                 });

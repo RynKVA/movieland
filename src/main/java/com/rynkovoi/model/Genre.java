@@ -16,7 +16,6 @@ import lombok.ToString;
 @Getter
 @Setter
 @Builder
-@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "genres")

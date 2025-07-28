@@ -61,6 +61,11 @@ public class JooqMovieRepository implements MovieRepository {
     }
 
     @Override
+    public Movie save(Movie movie) {
+        return null;
+    }
+
+    @Override
     public Optional<Movie> findById(Long id) {
         return Optional.empty();
     }

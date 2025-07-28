@@ -9,12 +9,12 @@ import java.math.BigDecimal;
 @Builder
 public class MovieDto {
 
-    private long id;
-    private String nameNative;
-    private String nameRussian;
-    private int yearOfRelease;
-    private double rating;
-    private BigDecimal price;
-    private String picturePath;
+    private final long id;
+    private final String nameNative;
+    private final String nameRussian;
+    private final int yearOfRelease;
+    private final double rating;
+    private final BigDecimal price;
+    private final String picturePath;
 
 }

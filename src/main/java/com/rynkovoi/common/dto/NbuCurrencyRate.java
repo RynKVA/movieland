@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 public class NbuCurrencyRate {
 
     @JsonProperty("cc")
-    private String currencyCode;
+    private final String currencyCode;
     @JsonProperty("rate")
-    private BigDecimal currencyRate;
+    private final BigDecimal currencyRate;
 }

@@ -3,6 +3,8 @@ package com.rynkovoi.web;
 import com.rynkovoi.common.MovieFilter;
 import com.rynkovoi.common.dto.MovieDto;
 import com.rynkovoi.common.dto.PageWrapper;
+import com.rynkovoi.common.request.AddMovieRequest;
+import com.rynkovoi.common.request.UpdateMovieRequest;
 import com.rynkovoi.common.response.MovieResponse;
 import com.rynkovoi.service.MovieService;
 import com.rynkovoi.type.CurrencyCode;
@@ -11,8 +13,12 @@ import com.rynkovoi.type.SortType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,20 +34,22 @@ public class MovieController {
     private final MovieService movieService;
 
     @GetMapping
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     public PageWrapper<MovieDto> getAll(@RequestParam(required = false) SortType sortType,
                                         @RequestParam(required = false, defaultValue = "ASC") SortDirection direction,
                                         @RequestParam(required = false, defaultValue = "0") int page,
                                         @RequestParam(required = false, defaultValue = "10") int size,
                                         @RequestParam(required = false) String searchText) {
-        log.info("Get all movies sorted by {} in {} direction, page {}, size {}, searchText '{}'",
-                sortType, direction, page, size, searchText);
-        return movieService.getAll(MovieFilter.builder()
+        MovieFilter movieFilter = MovieFilter.builder()
                 .sortType(sortType)
                 .sortDirection(direction)
                 .page(page)
                 .size(size)
                 .searchText(searchText)
-                .build());
+                .build();
+
+        log.info("Get all movies:{}", movieFilter);
+        return movieService.getAll(movieFilter);
     }
 
     @GetMapping("/{id}")
@@ -61,5 +69,20 @@ public class MovieController {
     public List<MovieDto> getByGenre(@PathVariable int genreId) {
         log.info("Get movies by genre id {}", genreId);
         return movieService.getByGenreId(genreId);
+    }
+
+    @PostMapping
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    public MovieDto save(@RequestBody AddMovieRequest request) {
+        log.info("Save movie: {}", request);
+        return movieService.save(request);
+    }
+
+    @PutMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    public MovieDto update(@PathVariable long id,
+                           @RequestBody UpdateMovieRequest request) {
+        log.info("Update movie id: {} and {}", id, request);
+        return movieService.update(id, request);
     }
 }

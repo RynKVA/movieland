@@ -4,7 +4,9 @@ import com.rynkovoi.type.SortDirection;
 import com.rynkovoi.type.SortType;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 
+@ToString
 @Getter
 @Builder
 public class MovieFilter {

@@ -1,10 +1,13 @@
 package com.rynkovoi.repository;
 
-import com.rynkovoi.common.dto.ReleaseCountryDto;
+import com.rynkovoi.model.ReleaseCountry;
 
 import java.util.List;
+import java.util.Set;
 
 public interface ReleaseCountryRepository {
 
-    List<ReleaseCountryDto> findAllDto();
+    List<ReleaseCountry> findAll();
+
+    Set<ReleaseCountry> findByIdIn(List<Integer> ids);
 }

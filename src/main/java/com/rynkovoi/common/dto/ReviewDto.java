@@ -7,9 +7,7 @@ import lombok.Getter;
 @Builder
 public class ReviewDto {
 
-    private Long id;
-
-    private UserDto user;
-
-    private String text;
+    private final Long id;
+    private final UserDto user;
+    private final String text;
 }
