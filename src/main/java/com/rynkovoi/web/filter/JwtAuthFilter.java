@@ -1,4 +1,4 @@
-package com.rynkovoi.filter;
+package com.rynkovoi.web.filter;
 
 import com.rynkovoi.securety.JwtService;
 import jakarta.servlet.FilterChain;
@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,12 +21,14 @@ import java.io.IOException;
 
 @Component
 @RequiredArgsConstructor
+@Order(1)
 public class JwtAuthFilter extends OncePerRequestFilter {
+
+    private static final String AUTHORIZATION_HEADER = "Authorization";
+    private static final String BEARER_PREFIX = "Bearer ";
 
     private final UserDetailsService userDetailsService;
     private final JwtService jwtService;
-
-    private static final String AUTHORIZATION_HEADER = "Authorization";
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,
@@ -35,7 +38,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         String authHeader = request.getHeader(AUTHORIZATION_HEADER);
 
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+        if (authHeader == null || !authHeader.startsWith(BEARER_PREFIX)) {
             filterChain.doFilter(request, response);
             return;
         }

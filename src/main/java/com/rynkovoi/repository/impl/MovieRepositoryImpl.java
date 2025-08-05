@@ -1,7 +1,8 @@
-package com.rynkovoi.repository;
+package com.rynkovoi.repository.impl;
 
 import com.rynkovoi.common.MovieFilter;
 import com.rynkovoi.model.Movie;
+import com.rynkovoi.repository.custom.CriteriaMovieRepository;
 import com.rynkovoi.type.SortDirection;
 import com.rynkovoi.type.SortType;
 import jakarta.persistence.EntityManager;
@@ -28,7 +29,7 @@ import static java.util.Objects.nonNull;
 
 @Repository
 @RequiredArgsConstructor
-public class CriteriaMovieRepository {
+public class MovieRepositoryImpl implements CriteriaMovieRepository {
 
     @PersistenceContext
     private final EntityManager entityManager;

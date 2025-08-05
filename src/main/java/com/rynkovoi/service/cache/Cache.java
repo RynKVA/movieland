@@ -6,4 +6,5 @@ public interface Cache <T>{
 
     List<T> findAll();
 
+    boolean isExist(T dto);
 }

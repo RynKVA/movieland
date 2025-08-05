@@ -1,15 +1,16 @@
-package com.rynkovoi.filter;
+package com.rynkovoi.web.filter;
 
+import com.rynkovoi.model.User;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import org.slf4j.MDC;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -17,6 +18,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 @Component
+@Order(2)
 public class MdcLoggingFilter extends OncePerRequestFilter {
 
     @Override
@@ -24,7 +26,7 @@ public class MdcLoggingFilter extends OncePerRequestFilter {
                                     @NonNull HttpServletResponse response,
                                     @NonNull FilterChain filterChain) throws ServletException, IOException {
         try {
-            MDC.put("user", getUserEmail());
+            MDC.put("userId", getUserEmail());
             MDC.put("reqId", UUID.randomUUID().toString());
 
             filterChain.doFilter(request, response);
@@ -37,13 +39,11 @@ public class MdcLoggingFilter extends OncePerRequestFilter {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null) {
             return "empty";
-        }
-
-        if (authentication instanceof AnonymousAuthenticationToken) {
+        } else if (authentication instanceof AnonymousAuthenticationToken) {
             return "anonymous";
         }
 
-        UserDetails principal = (UserDetails) authentication.getPrincipal();
-        return principal.getUsername();
+        User principal = (User) authentication.getPrincipal();
+        return principal.getId().toString();
     }
 }

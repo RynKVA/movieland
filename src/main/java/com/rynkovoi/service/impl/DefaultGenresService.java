@@ -1,7 +1,7 @@
 package com.rynkovoi.service.impl;
 
 import com.rynkovoi.common.dto.GenreDto;
-import com.rynkovoi.model.Genre;
+import com.rynkovoi.mapper.CommonMapper;
 import com.rynkovoi.repository.GenreRepository;
 import com.rynkovoi.service.GenreService;
 import com.rynkovoi.service.cache.Cache;
@@ -19,6 +19,7 @@ public class DefaultGenresService implements GenreService {
 
     private final Cache<GenreDto> cache;
     private final GenreRepository genreRepository;
+    private final CommonMapper mapper;
 
     @Override
     public List<GenreDto> getAll() {
@@ -26,7 +27,13 @@ public class DefaultGenresService implements GenreService {
     }
 
     @Override
-    public Set<Genre> findAllByIds(List<Integer> ids) {
-        return genreRepository.findByIdIn(ids);
+    public List<GenreDto> findByMovieId(long movieId) {
+        return mapper.toGenreDtos(genreRepository.findByMovieId(movieId));
+    }
+
+    @Override
+    public boolean isValid(Set<GenreDto> genres) {
+        return genres.stream()
+                .allMatch(cache::isExist);
     }
 }

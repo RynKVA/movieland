@@ -1,0 +1,1 @@
+alter table movies add column if not exists last_modified_date timestamp not null default now();

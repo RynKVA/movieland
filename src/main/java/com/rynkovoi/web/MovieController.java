@@ -3,11 +3,11 @@ package com.rynkovoi.web;
 import com.rynkovoi.common.MovieFilter;
 import com.rynkovoi.common.dto.MovieDto;
 import com.rynkovoi.common.dto.PageWrapper;
-import com.rynkovoi.common.request.AddMovieRequest;
-import com.rynkovoi.common.request.UpdateMovieRequest;
+import com.rynkovoi.common.request.MovieRequest;
 import com.rynkovoi.common.response.MovieResponse;
 import com.rynkovoi.service.MovieService;
 import com.rynkovoi.type.CurrencyCode;
+import com.rynkovoi.type.EnrichmentType;
 import com.rynkovoi.type.SortDirection;
 import com.rynkovoi.type.SortType;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @RestController
@@ -34,7 +35,6 @@ public class MovieController {
     private final MovieService movieService;
 
     @GetMapping
-    @PreAuthorize("hasAnyAuthority('ADMIN')")
     public PageWrapper<MovieDto> getAll(@RequestParam(required = false) SortType sortType,
                                         @RequestParam(required = false, defaultValue = "ASC") SortDirection direction,
                                         @RequestParam(required = false, defaultValue = "0") int page,
@@ -54,9 +54,11 @@ public class MovieController {
 
     @GetMapping("/{id}")
     public MovieResponse getById(@PathVariable long id,
-                                 @RequestParam(defaultValue = "UAH") CurrencyCode currency) {
+                                 @RequestParam(defaultValue = "UAH") CurrencyCode currency,
+                                 @RequestParam(required = false) Set<EnrichmentType> enrichmentTypes) {
+
         log.info("Get movie by id {}", id);
-        return movieService.getById(id, currency);
+        return movieService.getById(id, currency, enrichmentTypes);
     }
 
     @GetMapping("/random")
@@ -73,7 +75,7 @@ public class MovieController {
 
     @PostMapping
     @PreAuthorize("hasAnyAuthority('ADMIN')")
-    public MovieDto save(@RequestBody AddMovieRequest request) {
+    public MovieDto save(@RequestBody MovieRequest request) {
         log.info("Save movie: {}", request);
         return movieService.save(request);
     }
@@ -81,7 +83,7 @@ public class MovieController {
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ADMIN')")
     public MovieDto update(@PathVariable long id,
-                           @RequestBody UpdateMovieRequest request) {
+                           @RequestBody MovieRequest request) {
         log.info("Update movie id: {} and {}", id, request);
         return movieService.update(id, request);
     }

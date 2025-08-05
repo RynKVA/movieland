@@ -12,13 +12,16 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.OptimisticLocking;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Getter
@@ -28,6 +31,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Table(name = "movies")
 @Entity
+@OptimisticLocking
 public class Movie {
 
     @Id
@@ -61,4 +65,7 @@ public class Movie {
     private double rating;
     private BigDecimal price;
     private String poster;
+
+    @Version
+    private LocalDateTime lastModifiedDate;
 }

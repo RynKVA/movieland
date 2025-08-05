@@ -3,7 +3,7 @@
     <property name="LOG_ROOT" value="./logs"/>
     <property name="LOG_FILE" value="${LOG_ROOT}/movieland.log"/>
     <property name="CONSOLE_LOG_PATTERN"
-              value="%green(%d) %magenta([%t]) %highlight(%-5level) %yellow([user=%X{user} reqId=%X{reqId}]) %cyan(%C{1}) %magenta(%m%n)"/>
+              value="%green(%d) %magenta([%t]) %highlight(%-5level) %yellow([userId=%X{userId} reqId=%X{reqId}]) %cyan(%C{1}) %magenta(%m%n)"/>
     <property name="FILE_LOG_PATTERN"
               value="%d %p [userId=%X{userId} reqId=%X{reqId}] %C{1} [%t] %m%n"/>
 

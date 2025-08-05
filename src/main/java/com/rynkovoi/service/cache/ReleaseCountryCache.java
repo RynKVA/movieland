@@ -11,20 +11,29 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class ReleaseCountryCache implements Cache<ReleaseCountryDto>{
+public class ReleaseCountryCache implements Cache<ReleaseCountryDto> {
 
     private final ReleaseCountryRepository releaseCountryRepository;
     private final CommonMapper mapper;
-    private volatile List<ReleaseCountryDto> cache;
+    private volatile Map<Integer, ReleaseCountryDto> cache;
 
     @Override
     public List<ReleaseCountryDto> findAll() {
-        return new ArrayList<>(cache);
+        return new ArrayList<>(cache.values());
+    }
+
+    @Override
+    public boolean isExist(ReleaseCountryDto countryDto) {
+        ReleaseCountryDto cachedCountry = cache.get(countryDto.getId());
+        return cachedCountry != null && cachedCountry.getName().equals(countryDto.getName());
     }
 
     @PostConstruct
@@ -32,7 +41,9 @@ public class ReleaseCountryCache implements Cache<ReleaseCountryDto>{
             initialDelayString = "${cache.delay}",
             timeUnit = TimeUnit.HOURS)
     void updateCache() {
-        cache = mapper.toReleaseCountryDtos(releaseCountryRepository.findAll());
+        List<ReleaseCountryDto> countryDtos = mapper.toReleaseCountryDtos(releaseCountryRepository.findAll());
+        cache = countryDtos.stream()
+                .collect(Collectors.toMap(ReleaseCountryDto::getId, Function.identity()));
         log.info("Cache updated: {} items", cache.size());
     }
 }
