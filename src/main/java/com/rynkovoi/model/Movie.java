@@ -18,6 +18,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.OptimisticLocking;
 
 import java.math.BigDecimal;
@@ -32,6 +33,7 @@ import java.util.Set;
 @Table(name = "movies")
 @Entity
 @OptimisticLocking
+@DynamicUpdate
 public class Movie {
 
     @Id

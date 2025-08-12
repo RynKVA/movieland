@@ -1,6 +1,6 @@
 package com.rynkovoi.web.filter;
 
-import com.rynkovoi.securety.JwtService;
+import com.rynkovoi.security.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,7 +21,7 @@ import java.io.IOException;
 
 @Component
 @RequiredArgsConstructor
-@Order(1)
+@Order(Integer.MIN_VALUE)
 public class JwtAuthFilter extends OncePerRequestFilter {
 
     private static final String AUTHORIZATION_HEADER = "Authorization";

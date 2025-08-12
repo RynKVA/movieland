@@ -12,6 +12,7 @@ import com.rynkovoi.properties.MovieProperties;
 import com.rynkovoi.repository.MovieRepository;
 import com.rynkovoi.service.MovieEnrichmentService;
 import com.rynkovoi.service.MovieService;
+import com.rynkovoi.service.cache.MovieCache;
 import com.rynkovoi.service.converter.CurrencyConverter;
 import com.rynkovoi.service.validator.MovieRequestValidator;
 import com.rynkovoi.type.CurrencyCode;
@@ -37,6 +38,7 @@ public class DefaultMovieService implements MovieService {
     private final MovieProperties movieProperties;
     private final MovieEnrichmentService enrichmentService;
     private final MovieRequestValidator movieRequestValidator;
+    private final MovieCache movieCache;
 
     @Override
     public PageWrapper<MovieDto> getAll(MovieFilter movieFilter) {
@@ -58,24 +60,45 @@ public class DefaultMovieService implements MovieService {
         Movie movie = movieRepository.findByIdWithGenresAndReleaseCountries(id)
                 .orElseThrow(() -> new MovieNotFoundException(id));
 
+
         mapper.update(request, movie);
-        return mapper.toMovieDto(movieRepository.save(movie));
+        movieCache.update(id, mapper.toMovieResponse(movie, movie.getPrice()));
+
+        return mapper.toMovieDto(movie);
+    }
+
+    @Override
+    @Transactional
+    public void delete(long id) {
+        Movie movie = movieRepository.findById(id)
+                .orElseThrow(() -> new MovieNotFoundException(id));
+        movieRepository.delete(movie);
+        log.info("Movie with id {} deleted", id);
     }
 
     @Override
     public MovieResponse getById(long id, CurrencyCode currencyCode, Set<EnrichmentType> enrichmentTypes) {
+        MovieResponse cachedMovie = movieCache.get(id);
+
+        if (cachedMovie != null) {
+            enrichmentService.asyncEnrich(cachedMovie, enrichmentTypes.toArray(new EnrichmentType[0]));
+            return cachedMovie;
+        }
+
         Movie movie = movieRepository.findById(id)
                 .orElseThrow(() -> new MovieNotFoundException(id));
         MovieResponse trimmedMovieResponse = mapper.toTrimmedMovieResponse(movie);
-        MovieResponse enrichedmovieResponse = enrichmentService.enrich(trimmedMovieResponse, enrichmentTypes);
+        MovieResponse enrichedMovieResponse = enrichmentService.asyncEnrich(trimmedMovieResponse, enrichmentTypes.toArray(new EnrichmentType[0]));
+
+        MovieResponse savedMovieResponse = movieCache.save(enrichedMovieResponse);
 
         if (currencyCode.equals(CurrencyCode.UAH)) {
-            return enrichedmovieResponse;
+            return savedMovieResponse;
         }
 
         BigDecimal convertedPrice = currencyConverter.convert(movie.getPrice(), currencyCode);
-        enrichedmovieResponse.setPrice(convertedPrice);
-        return enrichedmovieResponse;
+        savedMovieResponse.setPrice(convertedPrice);
+        return savedMovieResponse;
     }
 
     @Override
@@ -88,4 +111,5 @@ public class DefaultMovieService implements MovieService {
     public List<MovieDto> getByGenreId(int genreId) {
         return mapper.toMovieDtos(movieRepository.findByGenresId(genreId));
     }
+
 }

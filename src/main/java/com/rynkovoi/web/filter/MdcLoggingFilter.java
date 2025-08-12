@@ -18,7 +18,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 @Component
-@Order(2)
+@Order(1)
 public class MdcLoggingFilter extends OncePerRequestFilter {
 
     @Override

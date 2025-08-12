@@ -24,4 +24,6 @@ public interface MovieService {
     MovieDto save(MovieRequest request);
 
     MovieDto update(long id, MovieRequest request);
+
+    void delete(long id);
 }

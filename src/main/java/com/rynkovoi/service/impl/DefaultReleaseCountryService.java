@@ -7,10 +7,12 @@ import com.rynkovoi.repository.ReleaseCountryRepository;
 import com.rynkovoi.service.ReleaseCountryService;
 import com.rynkovoi.service.cache.Cache;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +30,12 @@ public class DefaultReleaseCountryService implements ReleaseCountryService {
     @Override
     public List<ReleaseCountryDto> findByMovieId(long id) {
         return mapper.toReleaseCountryDtos(releaseCountryRepository.findByMovieId(id));
+    }
+
+    @Override
+    @Async("enrichmentExecutor")
+    public CompletableFuture<List<ReleaseCountryDto>> findAsyncByMovieId(long movieId) {
+        return CompletableFuture.supplyAsync(() -> mapper.toReleaseCountryDtos(releaseCountryRepository.findByMovieId(movieId)));
     }
 
     @Override

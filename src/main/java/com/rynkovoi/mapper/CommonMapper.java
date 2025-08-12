@@ -51,7 +51,7 @@ public interface CommonMapper {
     @Mapping(target = "reviews", ignore = true)
     @Mapping(target = "rating", ignore = true)
     @Mapping(target = "lastModifiedDate", ignore = true)
-    Movie update(MovieRequest movieRequest, @MappingTarget Movie movie);
+    void update(MovieRequest movieRequest, @MappingTarget Movie movie);
 
     GenreDto toGenreDto(Genre genres);
 

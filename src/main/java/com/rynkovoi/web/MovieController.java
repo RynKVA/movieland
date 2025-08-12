@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -86,5 +87,12 @@ public class MovieController {
                            @RequestBody MovieRequest request) {
         log.info("Update movie id: {} and {}", id, request);
         return movieService.update(id, request);
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    public void delete(@PathVariable long id) {
+        log.info("Delete movie by id: {}", id);
+        movieService.delete(id);
     }
 }

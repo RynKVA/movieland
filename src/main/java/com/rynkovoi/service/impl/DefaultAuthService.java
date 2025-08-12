@@ -3,7 +3,7 @@ package com.rynkovoi.service.impl;
 import com.rynkovoi.common.request.AuthenticateRequest;
 import com.rynkovoi.common.response.AuthenticateResponse;
 import com.rynkovoi.model.User;
-import com.rynkovoi.securety.JwtService;
+import com.rynkovoi.security.JwtService;
 import com.rynkovoi.service.AuthService;
 import com.rynkovoi.service.UserService;
 import lombok.RequiredArgsConstructor;
