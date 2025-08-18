@@ -24,9 +24,10 @@ import java.util.concurrent.ConcurrentHashMap;
 @RequiredArgsConstructor
 public class CachedCurrencyRateService implements CurrencyRateService {
 
+    private final static DateTimeFormatter DATA_FORMAT = DateTimeFormatter.ofPattern("yyyyMMdd");
+
     private final RestClient restClient;
     private final Map<String, NbuCurrencyRate> cache = new ConcurrentHashMap<>();
-    private final static DateTimeFormatter DATA_FORMAT = DateTimeFormatter.ofPattern("yyyyMMdd");
 
     @Override
     public BigDecimal getRateByCurrencyCode(CurrencyCode currencyCode) {

@@ -9,7 +9,6 @@ import com.rynkovoi.type.CurrencyCode;
 import com.rynkovoi.type.EnrichmentType;
 
 import java.util.List;
-import java.util.Set;
 
 public interface MovieService {
 
@@ -19,7 +18,7 @@ public interface MovieService {
 
     List<MovieDto> getByGenreId(int genreId);
 
-    MovieResponse getById(long id, CurrencyCode currency, Set<EnrichmentType> enrichmentTypes);
+    MovieResponse getById(long id, CurrencyCode currency, EnrichmentType ... enrichmentTypes);
 
     MovieDto save(MovieRequest request);
 

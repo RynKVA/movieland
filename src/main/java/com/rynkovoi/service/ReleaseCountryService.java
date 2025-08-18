@@ -5,7 +5,6 @@ import com.rynkovoi.model.ReleaseCountry;
 
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.CompletableFuture;
 
 public interface ReleaseCountryService {
 
@@ -14,6 +13,4 @@ public interface ReleaseCountryService {
     boolean isValid(Set<ReleaseCountryDto> countries);
 
     List<ReleaseCountryDto> findByMovieId(long id);
-
-    CompletableFuture<List<ReleaseCountryDto>> findAsyncByMovieId(long movieId);
 }

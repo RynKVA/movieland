@@ -10,7 +10,7 @@ import com.rynkovoi.mapper.CommonMapper;
 import com.rynkovoi.model.Movie;
 import com.rynkovoi.properties.MovieProperties;
 import com.rynkovoi.repository.MovieRepository;
-import com.rynkovoi.service.MovieEnrichmentService;
+import com.rynkovoi.service.enricher.MovieEnrichmentService;
 import com.rynkovoi.service.MovieService;
 import com.rynkovoi.service.cache.MovieCache;
 import com.rynkovoi.service.converter.CurrencyConverter;
@@ -25,7 +25,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Set;
 
 @Slf4j
 @Service
@@ -77,28 +76,10 @@ public class DefaultMovieService implements MovieService {
     }
 
     @Override
-    public MovieResponse getById(long id, CurrencyCode currencyCode, Set<EnrichmentType> enrichmentTypes) {
-        MovieResponse cachedMovie = movieCache.get(id);
-
-        if (cachedMovie != null) {
-            enrichmentService.asyncEnrich(cachedMovie, enrichmentTypes.toArray(new EnrichmentType[0]));
-            return cachedMovie;
-        }
-
-        Movie movie = movieRepository.findById(id)
-                .orElseThrow(() -> new MovieNotFoundException(id));
-        MovieResponse trimmedMovieResponse = mapper.toTrimmedMovieResponse(movie);
-        MovieResponse enrichedMovieResponse = enrichmentService.asyncEnrich(trimmedMovieResponse, enrichmentTypes.toArray(new EnrichmentType[0]));
-
-        MovieResponse savedMovieResponse = movieCache.save(enrichedMovieResponse);
-
-        if (currencyCode.equals(CurrencyCode.UAH)) {
-            return savedMovieResponse;
-        }
-
-        BigDecimal convertedPrice = currencyConverter.convert(movie.getPrice(), currencyCode);
-        savedMovieResponse.setPrice(convertedPrice);
-        return savedMovieResponse;
+    public MovieResponse getById(long id, CurrencyCode currencyCode, EnrichmentType... enrichmentTypes) {
+        MovieResponse cachedMovieResponse = movieCache.get(id);
+        convertPrice(cachedMovieResponse, currencyCode);
+        return cachedMovieResponse;
     }
 
     @Override
@@ -110,6 +91,13 @@ public class DefaultMovieService implements MovieService {
     @Override
     public List<MovieDto> getByGenreId(int genreId) {
         return mapper.toMovieDtos(movieRepository.findByGenresId(genreId));
+    }
+
+    private void convertPrice(MovieResponse movieResponse, CurrencyCode currencyCode) {
+        if (!currencyCode.equals(CurrencyCode.UAH)) {
+            BigDecimal convertedPrice = currencyConverter.convert(movieResponse.getPrice(), currencyCode);
+            movieResponse.setPrice(convertedPrice);
+        }
     }
 
 }

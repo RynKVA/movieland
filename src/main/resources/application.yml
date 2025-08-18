@@ -2,6 +2,10 @@ server:
   port: ${PORT:3001}
 
 spring:
+  profiles:
+    active:
+#      - completable-future-enrichment
+      - parallel-enrichment
   datasource:
     url: ${URL_DB:jdbc:postgresql://localhost:5432/movieland}
     username: ${DB_USER:postgres}
@@ -41,4 +45,6 @@ jwt:
   secret-key: YTJkM2Y0ZjViNjc4OTBhYmNkZWYxMjM0NTY3ODkwYWJjZGVm
   expiration: 3600000 # 1 hour in milliseconds
 
+enrich:
+  timeout: 5 # seconds
 

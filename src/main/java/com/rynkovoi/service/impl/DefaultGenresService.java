@@ -7,12 +7,10 @@ import com.rynkovoi.service.GenreService;
 import com.rynkovoi.service.cache.Cache;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.CompletableFuture;
 
 @Slf4j
 @Service
@@ -31,12 +29,6 @@ public class DefaultGenresService implements GenreService {
     @Override
     public List<GenreDto> findByMovieId(long movieId) {
         return mapper.toGenreDtos(genreRepository.findByMovieId(movieId));
-    }
-
-    @Override
-    @Async("enrichmentExecutor")
-    public CompletableFuture<List<GenreDto>> findAsyncByMovieId(long movieId) {
-        return CompletableFuture.supplyAsync(() -> mapper.toGenreDtos(genreRepository.findByMovieId(movieId)));
     }
 
     @Override

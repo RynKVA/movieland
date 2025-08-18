@@ -53,6 +53,8 @@ public interface CommonMapper {
     @Mapping(target = "lastModifiedDate", ignore = true)
     void update(MovieRequest movieRequest, @MappingTarget Movie movie);
 
+    MovieResponse copy(MovieResponse source);
+
     GenreDto toGenreDto(Genre genres);
 
     ReleaseCountryDto toReleaseCountryDto(ReleaseCountry releaseCountry);

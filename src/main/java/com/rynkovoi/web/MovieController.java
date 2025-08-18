@@ -55,11 +55,10 @@ public class MovieController {
 
     @GetMapping("/{id}")
     public MovieResponse getById(@PathVariable long id,
-                                 @RequestParam(defaultValue = "UAH") CurrencyCode currency,
-                                 @RequestParam(required = false) Set<EnrichmentType> enrichmentTypes) {
+                                 @RequestParam(defaultValue = "UAH") CurrencyCode currency) {
 
         log.info("Get movie by id {}", id);
-        return movieService.getById(id, currency, enrichmentTypes);
+        return movieService.getById(id, currency, EnrichmentType.values());
     }
 
     @GetMapping("/random")
