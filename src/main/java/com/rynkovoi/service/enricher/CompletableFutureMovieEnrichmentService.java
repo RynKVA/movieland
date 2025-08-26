@@ -19,7 +19,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
-import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.function.Consumer;
@@ -39,7 +39,7 @@ public class CompletableFutureMovieEnrichmentService implements MovieEnrichmentS
     private final ReleaseCountryService releaseCountryService;
     private final ReviewService reviewService;
     private final EnrichProperty enrichProperty;
-    private final Executor enrichmentExecutor;
+    private final ExecutorService enrichmentExecutorService;
 
     @Override
     public void enrich(MovieResponse trimmedMovieResponse, EnrichmentType... types) {
@@ -54,7 +54,7 @@ public class CompletableFutureMovieEnrichmentService implements MovieEnrichmentS
         List<EnrichmentType> listEnrichType = Arrays.asList(types);
         if (listEnrichType.contains(GENRES)) {
             CompletableFuture<List<GenreDto>> genreFuture = CompletableFuture.supplyAsync(
-                    () -> genreService.findByMovieId(movieId), enrichmentExecutor);
+                    () -> genreService.findByMovieId(movieId), enrichmentExecutorService);
             CompletableFuture<Void> future = genreFuture
                     .orTimeout(timeout, SECONDS)
                     .thenAccept(trimmedMovieResponse::setGenres)
@@ -67,7 +67,7 @@ public class CompletableFutureMovieEnrichmentService implements MovieEnrichmentS
 
         if (listEnrichType.contains(COUNTRIES)) {
             CompletableFuture<List<ReleaseCountryDto>> countriesFuture = CompletableFuture.supplyAsync(
-                    () -> releaseCountryService.findByMovieId(movieId), enrichmentExecutor);
+                    () -> releaseCountryService.findByMovieId(movieId), enrichmentExecutorService);
             CompletableFuture<Void> future = countriesFuture
                     .orTimeout(timeout, TimeUnit.SECONDS)
                     .thenAccept(trimmedMovieResponse::setCountries)
@@ -80,7 +80,7 @@ public class CompletableFutureMovieEnrichmentService implements MovieEnrichmentS
 
         if (listEnrichType.contains(REVIEWS)) {
             CompletableFuture<List<ReviewDto>> reviewsFuture = CompletableFuture.supplyAsync(
-                    () -> reviewService.findByMovieId(movieId), enrichmentExecutor);
+                    () -> reviewService.findByMovieId(movieId), enrichmentExecutorService);
             CompletableFuture<Void> future = reviewsFuture
                     .orTimeout(timeout, TimeUnit.SECONDS)
                     .thenAccept(trimmedMovieResponse::setReviews)

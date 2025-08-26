@@ -14,14 +14,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-import java.util.function.Consumer;
 
 import static com.rynkovoi.type.EnrichmentType.COUNTRIES;
 import static com.rynkovoi.type.EnrichmentType.GENRES;
@@ -37,6 +36,7 @@ public class ParalelMovieEnrichmentService implements MovieEnrichmentService {
     private final ReleaseCountryService releaseCountryService;
     private final ReviewService reviewService;
     private final EnrichProperty enrichProperty;
+    private final ExecutorService enrichmentExecutorService;
 
     @Override
     public void enrich(MovieResponse trimmedMovieResponse, EnrichmentType... types) {
@@ -45,34 +45,40 @@ public class ParalelMovieEnrichmentService implements MovieEnrichmentService {
         if (types == null || types.length == 0) {
             return;
         }
-
-        long movieId = trimmedMovieResponse.getId();
-        ExecutorService executor = Executors.newCachedThreadPool();
-
-        if (Arrays.asList(types).contains(GENRES)) {
-            Future<List<GenreDto>> genreFuture = executor.submit(() -> genreService.findByMovieId(movieId));
-            handleFuture(genreFuture, trimmedMovieResponse::setGenres, GENRES.name());
-        }
-        if (Arrays.asList(types).contains(COUNTRIES)) {
-            Future<List<ReleaseCountryDto>> countryFuture = executor.submit(() -> releaseCountryService.findByMovieId(movieId));
-            handleFuture(countryFuture, trimmedMovieResponse::setCountries, COUNTRIES.name());
-        }
-        if (Arrays.asList(types).contains(REVIEWS)) {
-            Future<List<ReviewDto>> reviewFuture = executor.submit(() -> reviewService.findByMovieId(movieId));
-            handleFuture(reviewFuture, trimmedMovieResponse::setReviews, REVIEWS.name());
+        try {
+            enrichmentExecutorService.invokeAll(createEnrichmentTasks(trimmedMovieResponse, types),
+                    enrichProperty.getTimeout(), TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            log.warn("Enrichment tasks were interrupted", e);
         }
     }
 
-    private <T> void handleFuture(Future<T> future, Consumer<T> setter, String name) {
-        try {
-            setter.accept(future.get(enrichProperty.getTimeout(), TimeUnit.SECONDS));
-        } catch (TimeoutException e) {
-            log.warn("{} enrichment timed out", name);
-            future.cancel(true);
-        } catch (Exception e) {
-            log.error("{} enrichment failed", name, e);
-            future.cancel(true);
+    private List<Callable<Object>> createEnrichmentTasks(MovieResponse trimmedMovieResponse, EnrichmentType... types){
+        List<Callable<Object>> tasks = new ArrayList<>();
+        long movieId = trimmedMovieResponse.getId();
+
+        if (Arrays.asList(types).contains(GENRES)) {
+            Callable<Object> genreTask = Executors.callable(() -> {
+                List<GenreDto> genres = genreService.findByMovieId(movieId);
+                trimmedMovieResponse.setGenres(genres);
+            });
+            tasks.add(genreTask);
         }
+        if (Arrays.asList(types).contains(COUNTRIES)) {
+            Callable<Object> countriesTask = Executors.callable(() -> {
+                List<ReleaseCountryDto> countries = releaseCountryService.findByMovieId(movieId);
+                trimmedMovieResponse.setCountries(countries);
+            });
+            tasks.add(countriesTask);
+        }
+        if (Arrays.asList(types).contains(REVIEWS)) {
+            Callable<Object> reviewsTask = Executors.callable(() -> {
+                List<ReviewDto> reviews = reviewService.findByMovieId(movieId);
+                trimmedMovieResponse.setReviews(reviews);
+            });
+            tasks.add(reviewsTask);
+        }
+        return tasks;
     }
 }
 
